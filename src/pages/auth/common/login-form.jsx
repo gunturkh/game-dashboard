@@ -13,7 +13,7 @@ import { setUser } from "@/store/api/auth/authSlice";
 import { toast } from "react-toastify";
 const schema = yup
   .object({
-    email: yup.string().email("Invalid email").required("Email is Required"),
+    username: yup.string().required("Username is Required"),
     password: yup.string().required("Password is Required"),
   })
   .required();
@@ -37,11 +37,11 @@ const LoginForm = () => {
       const response = await login(data);
 
       if (response.error) {
-        throw new Error(response.error.message);
+        throw new Error(response.error.data.message);
       }
 
       if (response.data.error) {
-        throw new Error(response.data.error);
+        throw new Error(response.data.data.error);
       }
 
       if (!response.data.token) {
@@ -50,7 +50,7 @@ const LoginForm = () => {
 
       dispatch(setUser(data));
       navigate("/dashboard");
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
       toast.success("Login Successful");
     } catch (error) {
       toast.error(error.message);
@@ -62,19 +62,21 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
       <Textinput
-        name="email"
-        label="email"
-        defaultValue="dashcode@gmail.com"
-        type="email"
+        name="username"
+        label="username"
+        defaultValue=""
+        placeholder="Type your username here"
+        type="text"
         register={register}
-        error={errors.email}
+        error={errors.username}
         className="h-[48px]"
       />
       <Textinput
         name="password"
-        label="passwrod"
+        label="password"
         type="password"
-        defaultValue="dashcode"
+        defaultValue=""
+        placeholder="Type your password here"
         register={register}
         error={errors.password}
         className="h-[48px]"
