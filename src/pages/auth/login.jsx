@@ -21,7 +21,7 @@ const login = () => {
             </Link>
             <h4>
               Unlock your Project
-              <span className="text-slate-800 dark:text-slate-400 font-bold">
+              <span className="text-slate-800 dark:text-slate-400 font-bold ml-1">
                 performance
               </span>
             </h4>
