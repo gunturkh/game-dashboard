@@ -1,91 +1,17 @@
 import React, { useState } from "react";
-import Select, { components } from "react-select";
 import Modal from "@/components/ui/Modal";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleAddModal, pushCard } from "./store";
+import { toggleAddModal } from "./store";
+import Button from "@/components/ui/Button";
 import Textinput from "@/components/ui/Textinput";
-import Textarea from "@/components/ui/Textarea";
-import Flatpickr from "react-flatpickr";
-import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { v4 as uuidv4 } from "uuid";
 
-import avatar1 from "@/assets/images/avatar/av-1.svg";
-import avatar2 from "@/assets/images/avatar/av-2.svg";
-import avatar3 from "@/assets/images/avatar/av-3.svg";
-import avatar4 from "@/assets/images/avatar/av-4.svg";
-import FormGroup from "@/components/ui/FormGroup";
 import { Result } from "../Result";
-import { API_URL } from "@/store/api/apiSlice";
-
-const styles = {
-  multiValue: (base, state) => {
-    return state.data.isFixed ? { ...base, opacity: "0.5" } : base;
-  },
-  multiValueLabel: (base, state) => {
-    return state.data.isFixed
-      ? { ...base, color: "#626262", paddingRight: 6 }
-      : base;
-  },
-  multiValueRemove: (base, state) => {
-    return state.data.isFixed ? { ...base, display: "none" } : base;
-  },
-  option: (provided, state) => ({
-    ...provided,
-    fontSize: "14px",
-  }),
-};
-
-const assigneeOptions = [
-  { value: "mahedi", label: "Mahedi Amin", image: avatar1 },
-  { value: "sovo", label: "Sovo Haldar", image: avatar2 },
-  { value: "rakibul", label: "Rakibul Islam", image: avatar3 },
-  { value: "pritom", label: "Pritom Miha", image: avatar4 },
-];
-const options = [
-  {
-    value: "team",
-    label: "team",
-  },
-  {
-    value: "low",
-    label: "low",
-  },
-  {
-    value: "medium",
-    label: "medium",
-  },
-  {
-    value: "high",
-    label: "high",
-  },
-  {
-    value: "update",
-    label: "update",
-  },
-];
-
-const OptionComponent = ({ data, ...props }) => {
-  //const Icon = data.icon;
-
-  return (
-    <components.Option {...props}>
-      <span className="flex items-center space-x-4">
-        <div className="flex-none">
-          <div className="h-7 w-7 rounded-full">
-            <img
-              src={data.image}
-              alt=""
-              className="w-full h-full rounded-full"
-            />
-          </div>
-        </div>
-        <span className="flex-1">{data.label}</span>
-      </span>
-    </components.Option>
-  );
-};
+import { useCreateCardCategoriesMutation } from "./cardApiSlice";
+import { useUploadMutation } from "@/store/api/image/imageApiSlice";
 
 const AddCard = () => {
   const { openCardModal } = useSelector((state) => state.card);
@@ -93,6 +19,9 @@ const AddCard = () => {
   console.log("token inside modal add card", token);
   const dispatch = useDispatch();
   const [status, setStatus] = useState("initial");
+
+  const [createCardCategories] = useCreateCardCategoriesMutation();
+  const [upload, { isLoading }] = useUploadMutation();
 
   const FormValidationSchema = yup
     .object({
@@ -114,23 +43,23 @@ const AddCard = () => {
   });
   console.log("errors", errors);
 
-  const onSubmit = (data) => {
-    console.log("data", data);
-    // const project = {
-    //   id: uuidv4(),
-    //   name: data.title,
-    //   assignee: data.assign,
-    //   // get only data value from startDate and endDate
-    //   category: null,
-    //   startDate: startDate.toISOString().split("T")[0],
-    //   endDate: endDate.toISOString().split("T")[0],
-    //   des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-    //   progress: Math.floor(Math.random() * (100 - 10 + 1) + 10),
-    // };
+  const onSubmit = async (data) => {
+    try {
+      console.log("data", data);
+      const { name, icon_url } = data;
+      const card = {
+        name,
+        icon_url,
+      };
 
-    // dispatch(pushCard(project));
-    // dispatch(toggleAddModal(false));
-    // reset();
+      const response = await createCardCategories(card);
+      console.log("response create card", response.data);
+      toast.success("Add Category Successful");
+      dispatch(toggleAddModal(false));
+      reset();
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const handleFileUpload = async (event) => {
@@ -139,19 +68,14 @@ const AddCard = () => {
     try {
       const formData = new FormData();
       formData.append("image", event.target.files[0]);
-      const result = await fetch(`${API_URL}/media/images`, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+      const response = await upload(formData);
+      console.log("image upload success", response.data);
 
-      const data = await result.json();
+      if (!response.data.status) {
+        throw new Error("Failed to upload image");
+      }
 
-      console.log('image upload success', data);
-      setValue("icon_url", data.data);
+      setValue("icon_url", response.data.data, { shouldValidate: true });
       setStatus("success");
     } catch (error) {
       console.error(error);
@@ -183,7 +107,12 @@ const AddCard = () => {
             </div>
           )}
           <div className="ltr:text-right rtl:text-left">
-            <button className="btn btn-dark  text-center">Add</button>
+            <Button
+              type="submit"
+              text="Add Category"
+              className="btn btn-dark block w-full text-center "
+              isLoading={isLoading}
+            />
           </div>
         </form>
       </Modal>

@@ -18,17 +18,48 @@ const CardPostPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const { cards } = useSelector((state) => state.card);
+  console.log("cards", cards);
   const dispatch = useDispatch();
+  const {
+    data: getCards,
+    isLoading: cardsLoading,
+    isFetching: cardsFetching,
+  } = useGetCardsQuery(undefined, {
+    pollingInterval: 30000,
+    skipPollingIfUnfocused: true,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
+  const {
+    data: getCardCategories,
+    isLoading: cardCategoriesLoading,
+    isFetching: cardCategoriesFetching,
+  } = useGetCardCategoriesQuery(undefined, {
+    pollingInterval: 30000,
+    skipPollingIfUnfocused: true,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
 
   useEffect(() => {
     setIsLoaded(true);
-    setTimeout(() => {
+    if (
+      !(
+        cardsFetching ||
+        cardsLoading ||
+        cardCategoriesFetching ||
+        cardCategoriesLoading
+      )
+    )
       setIsLoaded(false);
-    }, 1500);
-  }, [filler]);
+  }, [
+    filler,
+    cardsFetching,
+    cardsLoading,
+    cardCategoriesFetching,
+    cardCategoriesLoading,
+  ]);
 
-  const { data: getCards } = useGetCardsQuery();
-  const { data: getCardCategories } = useGetCardCategoriesQuery();
   console.log("getCards", getCards);
   console.log("getCardCategories", getCardCategories);
   return (
@@ -82,8 +113,12 @@ const CardPostPage = () => {
           />
         </div>
       </div>
-      {isLoaded && filler === "grid" && <GridLoading count={getCardCategories?.length} />}
-      {isLoaded && filler === "list" && <TableLoading count={getCardCategories?.length} />}
+      {isLoaded && filler === "grid" && (
+        <GridLoading count={getCardCategories?.length} />
+      )}
+      {isLoaded && filler === "list" && (
+        <TableLoading count={getCardCategories?.length} />
+      )}
 
       {filler === "grid" && !isLoaded && (
         <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
@@ -94,7 +129,7 @@ const CardPostPage = () => {
       )}
       {filler === "list" && !isLoaded && (
         <div>
-          <CardList cards={cards} />
+          <CardList cards={getCardCategories} />
         </div>
       )}
       <AddCard />

@@ -42,62 +42,6 @@ const CardList = ({ cards }) => {
       },
     },
     {
-      Header: "Start Date",
-      accessor: "startDate",
-      Cell: (row) => {
-        return <span>{row?.cell?.value}</span>;
-      },
-    },
-    {
-      Header: "End Date",
-      accessor: "endDate",
-      Cell: (row) => {
-        return <div>{row?.cell?.value}</div>;
-      },
-    },
-    {
-      Header: "assignee",
-      accessor: "assignee",
-      Cell: (row) => {
-        return (
-          <div>
-            <div className="flex justify-end sm:justify-start lg:justify-end xl:justify-start -space-x-1 rtl:space-x-reverse">
-              {row?.cell?.value.map((user, userIndex) => (
-                <div
-                  className="h-6 w-6 rounded-full ring-1 ring-slate-100"
-                  key={userIndex}
-                >
-                  <img
-                    src={user.image}
-                    alt={user.label}
-                    className="w-full h-full rounded-full"
-                  />
-                </div>
-              ))}
-              <div className="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-300 text-xs ring-2 ring-slate-100 dark:ring-slate-700 rounded-full h-6 w-6 flex flex-col justify-center items-center">
-                +2
-              </div>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      Header: "Status",
-      accessor: "progress",
-      Cell: (row) => {
-        return (
-          <span className="min-w-[220px] block">
-            <ProgressBar value={row?.cell?.value} className="bg-primary-500" />
-            <span className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1 font-medium mt-3">
-              12/15 Task Completed
-            </span>
-          </span>
-        );
-      },
-    },
-
-    {
       Header: "action",
       accessor: "action",
       Cell: (row) => {

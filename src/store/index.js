@@ -14,7 +14,7 @@ const combinedReducer = combineReducers({ ...rootReducer, [apiSlice.reducerPath]
 const persistedReducer = persistReducer(persistConfig, combinedReducer)
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: { ...rootReducer, [apiSlice.reducerPath]: apiSlice.reducer },
   devTools: true,
   middleware: (getDefaultMiddleware) => {
     const middleware = [...getDefaultMiddleware(), apiSlice.middleware];

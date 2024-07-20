@@ -28,7 +28,6 @@ const LoginForm = () => {
     handleSubmit,
   } = useForm({
     resolver: yupResolver(schema),
-    //
     mode: "all",
   });
   const navigate = useNavigate();
