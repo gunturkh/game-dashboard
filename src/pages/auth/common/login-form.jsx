@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useLoginMutation } from "@/store/api/auth/authApiSlice";
-import { setUser } from "@/store/api/auth/authSlice";
+import { setUser, setToken } from "@/store/api/auth/authSlice";
 import { toast } from "react-toastify";
 const schema = yup
   .object({
@@ -49,16 +49,19 @@ const LoginForm = () => {
       }
 
       dispatch(setUser(data));
+      dispatch(setToken(response.data.token));
       navigate("/dashboard");
-      localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      // localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      console.log("response", response);
+      localStorage.setItem("token", JSON.stringify(response.data.token));
       toast.success("Login Successful");
     } catch (error) {
       toast.error(error.message);
     }
   };
 
-  const [checked, setChecked] = useState(false);
-
+  // const [checked, setChecked] = useState(false);
+  console.log("errors", errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
       <Textinput
@@ -81,7 +84,7 @@ const LoginForm = () => {
         error={errors.password}
         className="h-[48px]"
       />
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <Checkbox
           value={checked}
           onChange={() => setChecked(!checked)}
@@ -93,7 +96,7 @@ const LoginForm = () => {
         >
           Forgot Password?{" "}
         </Link>
-      </div>
+      </div> */}
 
       <Button
         type="submit"
