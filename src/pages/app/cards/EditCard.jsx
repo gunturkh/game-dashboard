@@ -85,7 +85,7 @@ const OptionComponent = ({ data, ...props }) => {
 };
 
 const EditCard = () => {
-  const { editModal, editItem } = useSelector((state) => state.project);
+  const { editModal, editItem } = useSelector((state) => state.card);
   const dispatch = useDispatch();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());

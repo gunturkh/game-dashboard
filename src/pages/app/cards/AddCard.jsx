@@ -16,6 +16,8 @@ import avatar2 from "@/assets/images/avatar/av-2.svg";
 import avatar3 from "@/assets/images/avatar/av-3.svg";
 import avatar4 from "@/assets/images/avatar/av-4.svg";
 import FormGroup from "@/components/ui/FormGroup";
+import { Result } from "../Result";
+import { API_URL } from "@/store/api/apiSlice";
 
 const styles = {
   multiValue: (base, state) => {
@@ -87,23 +89,15 @@ const OptionComponent = ({ data, ...props }) => {
 
 const AddCard = () => {
   const { openCardModal } = useSelector((state) => state.card);
+  const { token } = useSelector((state) => state.auth);
+  console.log("token inside modal add card", token);
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [status, setStatus] = useState("initial");
 
   const FormValidationSchema = yup
     .object({
-      title: yup.string().required("Title is required"),
-      assign: yup.mixed().required("Assignee is required"),
-      tags: yup.mixed().required("Tag is required"),
-      startDate: yup
-        .date()
-        .required("Start date is required")
-        .min(new Date(), "Start date must be greater than today"),
-      endDate: yup
-        .date()
-        .required("End date is required")
-        .min(new Date(), "End date must be greater than today"),
+      name: yup.string().required("Category name is required"),
+      icon_url: yup.string().required("Category image is required"),
     })
     .required();
 
@@ -113,27 +107,56 @@ const AddCard = () => {
     reset,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm({
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
   });
+  console.log("errors", errors);
 
   const onSubmit = (data) => {
-    const project = {
-      id: uuidv4(),
-      name: data.title,
-      assignee: data.assign,
-      // get only data value from startDate and endDate
-      category: null,
-      startDate: startDate.toISOString().split("T")[0],
-      endDate: endDate.toISOString().split("T")[0],
-      des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
-      progress: Math.floor(Math.random() * (100 - 10 + 1) + 10),
-    };
+    console.log("data", data);
+    // const project = {
+    //   id: uuidv4(),
+    //   name: data.title,
+    //   assignee: data.assign,
+    //   // get only data value from startDate and endDate
+    //   category: null,
+    //   startDate: startDate.toISOString().split("T")[0],
+    //   endDate: endDate.toISOString().split("T")[0],
+    //   des: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.",
+    //   progress: Math.floor(Math.random() * (100 - 10 + 1) + 10),
+    // };
 
-    dispatch(pushCard(project));
-    dispatch(toggleAddModal(false));
-    reset();
+    // dispatch(pushCard(project));
+    // dispatch(toggleAddModal(false));
+    // reset();
+  };
+
+  const handleFileUpload = async (event) => {
+    console.log("file event", event.target.files[0]);
+    setStatus("uploading");
+    try {
+      const formData = new FormData();
+      formData.append("image", event.target.files[0]);
+      const result = await fetch(`${API_URL}/media/images`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await result.json();
+
+      console.log('image upload success', data);
+      setValue("icon_url", data.data);
+      setStatus("success");
+    } catch (error) {
+      console.error(error);
+      setStatus("fail");
+    }
   };
 
   return (
@@ -146,122 +169,19 @@ const AddCard = () => {
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
           <Textinput
-            name="title"
-            label="Project Name"
-            placeholder="Project Name"
+            name="name"
+            label="Category Name"
+            placeholder="Category Name"
             register={register}
-            error={errors.title}
+            error={errors.name}
           />
-          <div className="grid lg:grid-cols-2 gap-4 grid-cols-1">
-            <FormGroup
-              label="Start Date"
-              id="default-picker"
-              error={errors.startDate}
-            >
-              <Controller
-                name="startDate"
-                control={control}
-                render={({ field }) => (
-                  <Flatpickr
-                    className="form-control py-2"
-                    id="default-picker"
-                    placeholder="yyyy, dd M"
-                    value={startDate}
-                    onChange={(date) => {
-                      field.onChange(date);
-                    }}
-                    options={{
-                      altInput: true,
-                      altFormat: "F j, Y",
-                      dateFormat: "Y-m-d",
-                    }}
-                  />
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label="End Date"
-              id="default-picker2"
-              error={errors.endDate}
-            >
-              <Controller
-                name="endDate"
-                control={control}
-                render={({ field }) => (
-                  <Flatpickr
-                    className="form-control py-2"
-                    id="default-picker2"
-                    placeholder="yyyy, dd M"
-                    value={endDate}
-                    onChange={(date) => {
-                      field.onChange(date);
-                    }}
-                    options={{
-                      altInput: true,
-                      altFormat: "F j, Y",
-                      dateFormat: "Y-m-d",
-                    }}
-                  />
-                )}
-              />
-            </FormGroup>
-          </div>
-          <div className={errors.assign ? "has-error" : ""}>
-            <label className="form-label" htmlFor="icon_s">
-              Assignee
-            </label>
-            <Controller
-              name="assign"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={assigneeOptions}
-                  styles={styles}
-                  className="react-select"
-                  classNamePrefix="select"
-                  isMulti
-                  components={{
-                    Option: OptionComponent,
-                  }}
-                  id="icon_s"
-                />
-              )}
-            />
-            {errors.assign && (
-              <div className=" mt-2  text-danger-500 block text-sm">
-                {errors.assign?.message || errors.assign?.label.message}
-              </div>
-            )}
-          </div>
-
-          <div className={errors.tags ? "has-error" : ""}>
-            <label className="form-label" htmlFor="icon_s">
-              Tag
-            </label>
-            <Controller
-              name="tags"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={options}
-                  styles={styles}
-                  className="react-select"
-                  classNamePrefix="select"
-                  isMulti
-                  id="icon_s"
-                />
-              )}
-            />
-            {errors.assign && (
-              <div className=" mt-2  text-danger-500 block text-sm">
-                {errors.tags?.message || errors.tags?.label.message}
-              </div>
-            )}
-          </div>
-          <Textarea label="Description" placeholder="Description" />
-
+          <input type="file" onChange={handleFileUpload} />
+          <Result status={status} />
+          {errors?.icon_url && (
+            <div className={` mt-2 text-danger-500 block text-sm `}>
+              {errors?.icon_url?.message}
+            </div>
+          )}
           <div className="ltr:text-right rtl:text-left">
             <button className="btn btn-dark  text-center">Add</button>
           </div>
