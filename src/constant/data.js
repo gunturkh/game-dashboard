@@ -91,89 +91,89 @@ export const menuItems = [
     link: "cards",
     isHide: true,
   },
-  {
-    title: "Projects",
-    icon: "heroicons-outline:document",
-    link: "#",
-    isHide: true,
-    child: [
-      {
-        childtitle: "Projects",
-        childlink: "projects",
-      },
-      {
-        childtitle: "Project Details",
-        childlink: "project-details",
-      },
-    ],
-  },
-  {
-    title: "Ecommerce",
-    icon: "heroicons:shopping-bag",
-    link: "#",
-    child: [
-      {
-        childtitle: "User App",
+  // {
+  //   title: "Projects",
+  //   icon: "heroicons-outline:document",
+  //   link: "#",
+  //   isHide: true,
+  //   child: [
+  //     {
+  //       childtitle: "Projects",
+  //       childlink: "projects",
+  //     },
+  //     {
+  //       childtitle: "Project Details",
+  //       childlink: "project-details",
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Ecommerce",
+  //   icon: "heroicons:shopping-bag",
+  //   link: "#",
+  //   child: [
+  //     {
+  //       childtitle: "User App",
 
-        multi_menu: [
-          {
-            multiTitle: "Products",
-            multiLink: "products",
-          },
-          {
-            multiTitle: "Products Details",
-            multiLink: "products/1",
-          },
+  //       multi_menu: [
+  //         {
+  //           multiTitle: "Products",
+  //           multiLink: "products",
+  //         },
+  //         {
+  //           multiTitle: "Products Details",
+  //           multiLink: "products/1",
+  //         },
 
-          {
-            multiTitle: "Cart",
-            multiLink: "cart",
-          },
-          {
-            multiTitle: "Wishlist",
-            multiLink: "wishlist",
-          },
-        ],
-      },
-      {
-        childtitle: "Admin App",
+  //         {
+  //           multiTitle: "Cart",
+  //           multiLink: "cart",
+  //         },
+  //         {
+  //           multiTitle: "Wishlist",
+  //           multiLink: "wishlist",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       childtitle: "Admin App",
 
-        multi_menu: [
-          {
-            multiTitle: "Orders",
-            multiLink: "orders",
-            badge: "soon",
-          },
+  //       multi_menu: [
+  //         {
+  //           multiTitle: "Orders",
+  //           multiLink: "orders",
+  //           badge: "soon",
+  //         },
 
-          {
-            multiTitle: "Add Product",
-            multiLink: "add-product",
-            badge: "soon",
-          },
-          {
-            multiTitle: "Edit Product",
-            multiLink: "edit-product",
-            badge: "soon",
-          },
-          {
-            multiTitle: "Customers",
-            multiLink: "customers",
-            badge: "soon",
-          },
-          {
-            multiTitle: "Sellers",
-            multiLink: "sellers",
-            badge: "soon",
-          },
-          {
-            multiTitle: "Invoice",
-            multiLink: "invoice-ecommerce",
-            badge: "soon",
-          },
-        ],
-      },
-    ],
-  },
+  //         {
+  //           multiTitle: "Add Product",
+  //           multiLink: "add-product",
+  //           badge: "soon",
+  //         },
+  //         {
+  //           multiTitle: "Edit Product",
+  //           multiLink: "edit-product",
+  //           badge: "soon",
+  //         },
+  //         {
+  //           multiTitle: "Customers",
+  //           multiLink: "customers",
+  //           badge: "soon",
+  //         },
+  //         {
+  //           multiTitle: "Sellers",
+  //           multiLink: "sellers",
+  //           badge: "soon",
+  //         },
+  //         {
+  //           multiTitle: "Invoice",
+  //           multiLink: "invoice-ecommerce",
+  //           badge: "soon",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   // {
   //   isHeadr: true,
   //   title: "Pages",
