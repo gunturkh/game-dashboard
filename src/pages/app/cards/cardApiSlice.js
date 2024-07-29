@@ -4,7 +4,7 @@ export const cardApi = apiSlice.injectEndpoints({
     tagTypes: ['Cards', 'CardCategories'],
     endpoints: (builder) => ({
         getCards: builder.query({
-            query: () => '/admin/cards',
+            query: (id) => ({ url: `/admin/cards`, params: (id && { category_id: id }) }),
             transformResponse: (response) => response.data,
             providesTags: ["Cards"],
         }),

@@ -4,8 +4,6 @@ import { teamData } from "../../../constant/table-data";
 import Icon from "@/components/ui/Icon";
 import Dropdown from "@/components/ui/Dropdown";
 import { Menu } from "@headlessui/react";
-import Chart from "react-apexcharts";
-import { colors } from "@/constant/data";
 
 import {
   useTable,
@@ -14,72 +12,7 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-
-const series = [
-  {
-    data: [800, 600, 1000, 800, 600, 1000, 800, 900],
-  },
-];
-const options = {
-  chart: {
-    toolbar: {
-      autoSelected: "pan",
-      show: false,
-    },
-    offsetX: 0,
-    offsetY: 0,
-    zoom: {
-      enabled: false,
-    },
-    sparkline: {
-      enabled: true,
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  stroke: {
-    curve: "smooth",
-    width: 2,
-  },
-  colors: [colors.primary],
-  tooltip: {
-    theme: "light",
-  },
-  grid: {
-    show: false,
-    padding: {
-      left: 0,
-      right: 0,
-    },
-  },
-  yaxis: {
-    show: false,
-  },
-  fill: {
-    type: "solid",
-    opacity: [0.1],
-  },
-  legend: {
-    show: false,
-  },
-  xaxis: {
-    low: 0,
-    offsetX: 0,
-    offsetY: 0,
-    show: false,
-    labels: {
-      low: 0,
-      offsetX: 0,
-      show: false,
-    },
-    axisBorder: {
-      low: 0,
-      offsetX: 0,
-      show: false,
-    },
-  },
-};
+import dayjs from "dayjs";
 
 const actions = [
   {
@@ -98,19 +31,20 @@ const actions = [
 const COLUMNS = [
   {
     Header: "name",
-    accessor: "customer",
+    accessor: "name",
     Cell: (row) => {
+      console.log("row", row);
       return (
         <span className="flex items-center min-w-[150px]">
           <span className="w-8 h-8 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
             <img
-              src={row?.cell?.value.image}
-              alt={row?.cell?.value.name}
+              src={row?.data[row?.cell?.row?.index]?.icon_url}
+              alt={row?.cell?.value}
               className="object-cover w-full h-full rounded-full"
             />
           </span>
           <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-            {row?.cell?.value.name}
+            {row?.cell?.value}
           </span>
         </span>
       );
@@ -119,22 +53,22 @@ const COLUMNS = [
 
   {
     Header: "status",
-    accessor: "status",
+    accessor: "is_active",
     Cell: (row) => {
       return (
         <span className="block min-w-[140px] text-left">
           <span className="inline-block text-center mx-auto py-1">
-            {row?.cell?.value === "progress" && (
+            {row?.cell?.value === false && (
               <span className="flex items-center space-x-3 rtl:space-x-reverse">
                 <span className="h-[6px] w-[6px] bg-danger-500 rounded-full inline-block ring-4 ring-opacity-30 ring-danger-500"></span>
-                <span>In progress</span>
+                <span>Inactive</span>
               </span>
             )}
-            {row?.cell?.value === "complete" && (
+            {row?.cell?.value === true && (
               <span className="flex items-center space-x-3 rtl:space-x-reverse">
                 <span className="h-[6px] w-[6px] bg-success-500 rounded-full inline-block ring-4 ring-opacity-30 ring-success-500"></span>
 
-                <span>Complete</span>
+                <span>Active</span>
               </span>
             )}
           </span>
@@ -143,23 +77,12 @@ const COLUMNS = [
     },
   },
   {
-    Header: "time",
-    accessor: "time",
+    Header: "Updated AT",
+    accessor: "updated_at",
     Cell: (row) => {
-      return <span>{row?.cell?.value}</span>;
+      return <span>{dayjs(row?.cell?.value).format('DD/MM/YYYY HH:mm:ss')}</span>;
     },
   },
-  // {
-  //   Header: "chart",
-  //   accessor: "chart",
-  //   Cell: (row) => {
-  //     return (
-  //       <span>
-  //         <Chart options={options} series={series} type="area" height={48} />
-  //       </span>
-  //     );
-  //   },
-  // },
   {
     Header: "action",
     accessor: "action",
@@ -203,9 +126,9 @@ const COLUMNS = [
   },
 ];
 
-const CardsTable = () => {
+const CardsTable = ({ cardsData }) => {
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => teamData, []);
+  const data = useMemo(() => cardsData, []);
 
   const tableInstance = useTable(
     {
