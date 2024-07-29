@@ -9,7 +9,7 @@ import { removeCard, updateCard } from "./store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const CardGrid = ({ card }) => {
+const CategoryGrid = ({ card }) => {
   const { name, progress, status, members, assignee, des, startDate, endDate } =
     card;
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const CardGrid = ({ card }) => {
   const navigate = useNavigate();
   // handleClick to view card single page
   const handleClick = (card) => {
-    navigate(`/cards/${card.id}`);
+    navigate(`/categories/${card.id}`);
   };
 
   return (
@@ -100,4 +100,4 @@ const CardGrid = ({ card }) => {
   );
 };
 
-export default CardGrid;
+export default CategoryGrid;

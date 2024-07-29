@@ -84,7 +84,7 @@ const OptionComponent = ({ data, ...props }) => {
   );
 };
 
-const EditCard = () => {
+const EditCategory = () => {
   const { editModal, editItem } = useSelector((state) => state.card);
   const dispatch = useDispatch();
   const [startDate, setStartDate] = useState(new Date());
@@ -282,4 +282,4 @@ const EditCard = () => {
   );
 };
 
-export default EditCard;
+export default EditCategory;

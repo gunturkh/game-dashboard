@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import useWidth from "@/hooks/useWidth";
 import Button from "@/components/ui/Button";
-import CardList from "./CardList";
+import CategoryList from "./CategoryList";
 import GridLoading from "@/components/skeleton/Grid";
 import TableLoading from "@/components/skeleton/Table";
 import { toggleAddModal } from "./store";
-import AddCard from "./AddCard";
+import AddCategory from "./AddCategory";
 import { ToastContainer } from "react-toastify";
-import EditCard from "./EditCard";
-import CardGrid from "./CardGrid";
+import EditCategory from "./EditCategory";
+import CategoryGrid from "./CategoryGrid";
 import { useGetCardCategoriesQuery, useGetCardsQuery } from "./cardApiSlice";
 
 const CardPostPage = () => {
@@ -106,7 +106,7 @@ const CardPostPage = () => {
           /> */}
           <Button
             icon="heroicons-outline:plus"
-            text="Add Card"
+            text="Add Category"
             className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
             iconClass=" text-lg"
             onClick={() => dispatch(toggleAddModal(true))}
@@ -123,17 +123,17 @@ const CardPostPage = () => {
       {filler === "grid" && !isLoaded && (
         <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
           {getCardCategories?.map((card, cardIndex) => (
-            <CardGrid card={card} key={cardIndex} />
+            <CategoryGrid card={card} key={cardIndex} />
           ))}
         </div>
       )}
       {filler === "list" && !isLoaded && (
         <div>
-          <CardList cards={getCardCategories} />
+          <CategoryList cards={getCardCategories} />
         </div>
       )}
-      <AddCard />
-      <EditCard />
+      <AddCategory />
+      <EditCategory />
     </div>
   );
 };

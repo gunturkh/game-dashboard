@@ -15,7 +15,7 @@ import {
   usePagination,
 } from "react-table";
 
-const CardList = ({ cards }) => {
+const CategoryList = ({ cards }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -90,7 +90,7 @@ const CardList = ({ cards }) => {
     {
       name: "view",
       icon: "heroicons-outline:eye",
-      doit: (item) => navigate(`/cards/${item.id}`),
+      doit: (item) => navigate(`/categories/${item.id}`),
     },
     {
       name: "edit",
@@ -275,4 +275,4 @@ const CardList = ({ cards }) => {
   );
 };
 
-export default CardList;
+export default CategoryList;

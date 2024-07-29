@@ -107,8 +107,8 @@ const ProjectDetailsPage = lazy(() =>
   import("./pages/app/projects/project-details")
 );
 const CardPostPage = lazy(() => import("./pages/app/cards"));
-const CardDetailsPage = lazy(() =>
-  import("./pages/app/cards/card-details")
+const CategoryDetailsPage = lazy(() =>
+  import("./pages/app/cards/category-details")
 );
 
 const KanbanPage = lazy(() => import("./pages/app/kanban"));
@@ -162,9 +162,8 @@ function App() {
           <Route path="projects" element={<ProjectPostPage />} />
           <Route path={"projects/:id"} element={<ProjectDetailsPage />} />
           <Route path="project-details" element={<ProjectDetailsPage />} />
-          <Route path="cards" element={<CardPostPage />} />
-          <Route path={"cards/:id"} element={<CardDetailsPage />} />
-          <Route path="card-details" element={<CardDetailsPage />} />
+          <Route path="categories" element={<CardPostPage />} />
+          <Route path={"categories/:id"} element={<CategoryDetailsPage />} />
           <Route path="kanban" element={<KanbanPage />} />
           <Route path="calender" element={<CalenderPage />} />
           {/* Components pages */}

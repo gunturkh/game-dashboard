@@ -22,9 +22,11 @@ const Layout = () => {
   const [collapsed] = useSidebar();
   const navigate = useNavigate();
   const { isAuth, user } = useSelector((state) => state.auth);
+  const token = localStorage.getItem("token");
+  console.log('token inside dashboard', token)
 
   useEffect(() => {
-    if (!isAuth || !user) {
+    if (token == "" || !token) {
       navigate("/");
     }
   }, [isAuth, navigate]);

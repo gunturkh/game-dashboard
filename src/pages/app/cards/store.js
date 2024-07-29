@@ -11,9 +11,11 @@ export const appCardSlice = createSlice({
   name: "appcard",
   initialState: {
     openCardModal: false,
+    openCategoryModal: false,
     isLoading: null,
     editItem: {},
     editModal: false,
+    editCardModal: false,
     cards: [
       {
         id: uuidv4(),
@@ -84,6 +86,9 @@ export const appCardSlice = createSlice({
   },
   reducers: {
     toggleAddModal: (state, action) => {
+      state.openCategoryModal = action.payload;
+    },
+    toggleAddCardModal: (state, action) => {
       state.openCardModal = action.payload;
     },
     toggleEditModal: (state, action) => {
@@ -147,6 +152,7 @@ export const {
   openModal,
   pushCard,
   toggleAddModal,
+  toggleAddCardModal,
   removeCard,
   toggleEditModal,
   updateCard,

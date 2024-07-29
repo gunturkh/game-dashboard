@@ -50,7 +50,6 @@ const LoginForm = () => {
       dispatch(setUser(data));
       dispatch(setToken(response.data.token));
       navigate("/dashboard");
-      // localStorage.setItem("user", JSON.stringify(response.data.data.user));
       console.log("response", response);
       localStorage.setItem("token", JSON.stringify(response.data.token));
       toast.success("Login Successful");

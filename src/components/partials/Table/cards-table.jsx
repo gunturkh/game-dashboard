@@ -176,7 +176,7 @@ const CardsTable = ({ cardsData }) => {
                 {...getTableProps}
               >
                 <thead className=" bg-slate-100 dark:bg-slate-700">
-                  {headerGroups.map((headerGroup) => (
+                  {headerGroups?.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
                         <th
@@ -203,7 +203,7 @@ const CardsTable = ({ cardsData }) => {
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
                   {...getTableBodyProps}
                 >
-                  {page.map((row) => {
+                  {page?.map((row) => {
                     prepareRow(row);
                     return (
                       <tr {...row.getRowProps()}>

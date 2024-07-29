@@ -88,7 +88,7 @@ export const menuItems = [
   {
     title: "Cards",
     icon: "heroicons-outline:document",
-    link: "cards",
+    link: "categories",
     isHide: true,
   },
   // {
