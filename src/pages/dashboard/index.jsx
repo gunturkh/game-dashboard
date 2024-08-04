@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@/components/ui/Card";
 import ImageBlock1 from "@/components/partials/widget/block/image-block-1";
 import GroupChart1 from "@/components/partials/widget/chart/group-chart-1";
@@ -10,38 +10,58 @@ import RecentActivity from "@/components/partials/widget/recent-activity";
 import MostSales from "../../components/partials/widget/most-sales";
 import RadarChart from "../../components/partials/widget/chart/radar-chart";
 import HomeBredCurbs from "./HomeBredCurbs";
+import { useGetDashboardQuery } from "./dashboardApiSlice";
+import Loading from "@/components/Loading";
 
 const Dashboard = () => {
   const [filterMap, setFilterMap] = useState("usa");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const {
+    data: getDashboard,
+    isLoading,
+    isFetching,
+  } = useGetDashboardQuery(undefined, {
+    pollingInterval: 180000,
+    skipPollingIfUnfocused: true,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
+
+  useEffect(() => {
+    setIsLoaded(true);
+    if (!(isLoading || isFetching)) setIsLoaded(false);
+  }, [isLoading, isFetching]);
+
+  if (isLoaded) {
+    return <Loading />;
+  }
+
   return (
     <div>
       <HomeBredCurbs title="Dashboard" />
       <div className="grid grid-cols-12 gap-5 mb-5">
-        <div className="2xl:col-span-3 lg:col-span-4 col-span-12">
-          <ImageBlock1 />
-        </div>
-        <div className="2xl:col-span-9 lg:col-span-8 col-span-12">
+        <div className="col-span-12">
           <Card bodyClass="p-4">
-            <div className="grid md:grid-cols-3 col-span-1 gap-4">
-              <GroupChart1 />
+            <div className="grid md:grid-cols-4 gap-4">
+              <GroupChart1 data={getDashboard} />
             </div>
           </Card>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-5">
-        <div className="lg:col-span-8 col-span-12">
+        {/* <div className="lg:col-span-8 col-span-12">
           <Card>
             <div className="legend-ring">
               <RevenueBarChart />
             </div>
           </Card>
-        </div>
+        </div> */}
         <div className="lg:col-span-4 col-span-12">
-          <Card title="Overview" headerslot={<SelectMonth />}>
-            <RadialsChart />
+          <Card title="Players Level" headerslot={<SelectMonth />}>
+            <RadialsChart data={getDashboard} />
           </Card>
         </div>
-        <div className="lg:col-span-8 col-span-12">
+        {/* <div className="lg:col-span-8 col-span-12">
           <Card title="All Company" headerslot={<SelectMonth />} noborder>
             <CompanyTable />
           </Card>
@@ -121,7 +141,7 @@ const Dashboard = () => {
               </div>
             </div>
           </Card>
-        </div>
+        </div> */}
       </div>
     </div>
   );

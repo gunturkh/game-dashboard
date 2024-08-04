@@ -14,7 +14,11 @@ const CategoryDetailsPage = () => {
   const dispatch = useDispatch();
   const { width, breakpoints } = useWidth();
   console.log("categories id", id);
-  const { data: getCards, isLoading } = useGetCardsQuery(id, {
+  const {
+    data: getCards,
+    isLoading,
+    isFetching,
+  } = useGetCardsQuery(id, {
     pollingInterval: 30000,
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
@@ -22,7 +26,7 @@ const CategoryDetailsPage = () => {
   });
   console.log("getCards", getCards);
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <LoaderCircle />;
   }
 

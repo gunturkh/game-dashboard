@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleAddCardModal, toggleAddModal } from "./store";
+import { toggleAddCardModal } from "./store";
 import Button from "@/components/ui/Button";
 import Textinput from "@/components/ui/Textinput";
 import { toast } from "react-toastify";
@@ -10,10 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { Result } from "../Result";
-import {
-  useCreateCardCategoriesMutation,
-  useCreateCardMutation,
-} from "./cardApiSlice";
+import { useCreateCardMutation } from "./cardApiSlice";
 import { useUploadMutation } from "@/store/api/image/imageApiSlice";
 import { useParams } from "react-router-dom";
 import Icons from "@/components/ui/Icon";
@@ -57,7 +54,7 @@ const AddCard = () => {
     mode: "all",
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, swap } = useFieldArray({
     control,
     name: "levels",
   });
@@ -66,21 +63,32 @@ const AddCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, icon_url } = data;
+      const { name, icon_url, levels } = data;
       const card = {
         name,
         icon_url,
-        category_id: id,
+        category_id: parseInt(id),
+        levels: levels.map((l) => ({
+          profit_per_hour: parseInt(l.profit_per_hour),
+          upgrade_price: parseInt(l.upgraded_price),
+        })),
       };
 
-      // const response = await createCard(card);
-      // console.log("response create card", response.data);
+      const response = await createCard(card);
+      console.log("response create card", response);
       console.log("create card", card);
-      toast.success("Add Card Successful");
-      dispatch(toggleAddModal(false));
+      if (response?.data) {
+        dispatch(toggleAddCardModal(false));
+        toast.success("Add Card Successful");
+        setStatus("initial");
+      } else if (response?.error?.data) {
+        throw new Error(response.error.data.message);
+      }
       reset();
     } catch (error) {
+      dispatch(toggleAddCardModal(false));
       toast.error(error.message);
+      setStatus("initial");
     }
   };
 
@@ -160,6 +168,26 @@ const AddCard = () => {
                   register={register}
                   defaultValue={field.profit_per_hour}
                 />
+                <button
+                  className="mt-6 border rounded-lg p-2 border-red-600"
+                  type="button"
+                  onClick={() => swap(index, index + 1)}
+                >
+                  <Icons
+                    className="text-red-600"
+                    icon={"heroicons-outline:arrow-down"}
+                  />
+                </button>
+                <button
+                  className="mt-6 border rounded-lg p-2 border-green-600"
+                  type="button"
+                  onClick={() => swap(index, index - 1)}
+                >
+                  <Icons
+                    className="text-green-600"
+                    icon={"heroicons-outline:arrow-up"}
+                  />
+                </button>
                 <button
                   className="mt-6"
                   type="button"

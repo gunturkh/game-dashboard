@@ -80,7 +80,9 @@ const COLUMNS = [
     Header: "Updated AT",
     accessor: "updated_at",
     Cell: (row) => {
-      return <span>{dayjs(row?.cell?.value).format('DD/MM/YYYY HH:mm:ss')}</span>;
+      return (
+        <span>{dayjs(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}</span>
+      );
     },
   },
   {
@@ -135,7 +137,7 @@ const CardsTable = ({ cardsData }) => {
       columns,
       data,
       initialState: {
-        pageSize: 6,
+        pageSize: data.length,
       },
     },
 

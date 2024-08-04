@@ -206,49 +206,62 @@ const shapeLine3 = {
 const statistics = [
   {
     name: shapeLine1,
-    title: "Totel revenue",
-    count: "3,564",
+    title: "Point Amount",
+    count: "point_amount",
     bg: "bg-[#E5F9FF] dark:bg-slate-900	",
   },
   {
     name: shapeLine2,
-    title: "Products sold",
-    count: "564",
+    title: "Spend Amount",
+    count: "spend_amount",
     bg: "bg-[#FFEDE5] dark:bg-slate-900	",
   },
   {
     name: shapeLine3,
-    title: "Growth",
-    count: "+5.0%",
+    title: "Total Active Categories",
+    count: "card_category_count",
+    bg: "bg-[#EAE5FF] dark:bg-slate-900	",
+  },
+  {
+    name: shapeLine3,
+    title: "Total Active Cards",
+    count: "card_count",
     bg: "bg-[#EAE5FF] dark:bg-slate-900	",
   },
 ];
-const GroupChart1 = () => {
+const GroupChart1 = ({ data }) => {
+  console.log("dashboard data", data);
   return (
     <>
-      {statistics.map((item, i) => (
-        <div className={`py-[18px] px-4 rounded-[6px] ${item.bg}`} key={i}>
-          <div className="flex items-center space-x-6 rtl:space-x-reverse">
-            <div className="flex-none">
-              <Chart
-                options={item.name.options}
-                series={item.name.series}
-                type="area"
-                height={48}
-                width={48}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium">
-                {item.title}
-              </div>
-              <div className="text-slate-900 dark:text-white text-lg font-medium">
-                {item.count}
+      {statistics.map((item, i) => {
+        return (
+          <div className={`py-[18px] px-4 rounded-[6px] ${item.bg}`} key={i}>
+            <div className="flex items-center space-x-6 rtl:space-x-reverse">
+              {/* <div className="flex-none">
+                <Chart
+                  options={item.name.options}
+                  series={item.name.series}
+                  type="area"
+                  height={48}
+                  width={48}
+                />
+              </div> */}
+              <div className="flex-1">
+                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium">
+                  {item.title}
+                </div>
+                <div className="text-slate-900 dark:text-white text-lg font-medium">
+                  {(data &&
+                    new Intl.NumberFormat("de-DE", {
+                      maximumSignificantDigits: 3,
+                    })?.format(data[`${item.count}`])) ||
+                    "-"}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 };
