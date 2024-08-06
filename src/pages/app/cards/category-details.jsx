@@ -26,35 +26,34 @@ const CategoryDetailsPage = () => {
   });
   console.log("getCards", getCards);
 
-  if (isLoading || isFetching) {
-    return <LoaderCircle />;
-  }
-
   return (
     <div className=" space-y-5">
       <div className="grid grid-cols-12 gap-5"></div>
-      <div className="grid grid-cols-12 gap-5">
-        <div className="xl:col-span-12 lg:col-span-12 col-span-12">
-          <div
-            className={`${
-              width < breakpoints.md ? "space-x-rb" : ""
-            } md:flex md:space-x-4 md:justify-end items-center rtl:space-x-reverse my-4`}
-          >
-            <Button
-              icon="heroicons-outline:plus"
-              text="Add Card"
-              className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
-              iconClass=" text-lg"
-              onClick={() => dispatch(toggleAddCardModal(true))}
-            />
+      {isLoading || isFetching ? (
+        <LoaderCircle />
+      ) : (
+        <div className="grid grid-cols-12 gap-5">
+          <div className="xl:col-span-12 lg:col-span-12 col-span-12">
+            <div
+              className={`${
+                width < breakpoints.md ? "space-x-rb" : ""
+              } md:flex md:space-x-4 md:justify-end items-center rtl:space-x-reverse my-4`}
+            >
+              <Button
+                icon="heroicons-outline:plus"
+                text="Add Card"
+                className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
+                iconClass=" text-lg"
+                onClick={() => dispatch(toggleAddCardModal(true))}
+              />
+            </div>
+            <Card title="Cards" noborder>
+              <CardsTable cardsData={getCards} />
+            </Card>
           </div>
-          <Card title="Cards" noborder>
-            <CardsTable cardsData={getCards} />
-          </Card>
-
-          <AddCard />
         </div>
-      </div>
+      )}
+      <AddCard />
     </div>
   );
 };
