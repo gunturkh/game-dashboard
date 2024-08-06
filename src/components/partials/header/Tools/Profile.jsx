@@ -41,6 +41,7 @@ const Profile = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     dispatch(logOut());
+    window.location.reload();
   };
 
   const ProfileMenu = [

@@ -1,107 +1,38 @@
-import React, { useState, useEffect } from "react";
-import Select, { components } from "react-select";
+import React, { useEffect, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import { useSelector, useDispatch } from "react-redux";
-import { updateCard, toggleEditModal } from "./store";
-import Icon from "@/components/ui/Icon";
-import Textarea from "@/components/ui/Textarea";
-import Flatpickr from "react-flatpickr";
+import { toggleAddModal, toggleEditCategoryModal } from "./store";
+import Button from "@/components/ui/Button";
+import Textinput from "@/components/ui/Textinput";
+import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { toast } from "react-toastify";
-import FormGroup from "@/components/ui/FormGroup";
-import avatar1 from "@/assets/images/avatar/av-1.svg";
-import avatar2 from "@/assets/images/avatar/av-2.svg";
-import avatar3 from "@/assets/images/avatar/av-3.svg";
-import avatar4 from "@/assets/images/avatar/av-4.svg";
 
-const styles = {
-  multiValue: (base, state) => {
-    return state.data.isFixed ? { ...base, opacity: "0.5" } : base;
-  },
-  multiValueLabel: (base, state) => {
-    return state.data.isFixed
-      ? { ...base, color: "#626262", paddingRight: 6 }
-      : base;
-  },
-  multiValueRemove: (base, state) => {
-    return state.data.isFixed ? { ...base, display: "none" } : base;
-  },
-  option: (provided, state) => ({
-    ...provided,
-    fontSize: "14px",
-  }),
-};
-
-const assigneeOptions = [
-  { value: "mahedi", label: "Mahedi Amin", image: avatar1 },
-  { value: "sovo", label: "Sovo Haldar", image: avatar2 },
-  { value: "rakibul", label: "Rakibul Islam", image: avatar3 },
-  { value: "pritom", label: "Pritom Miha", image: avatar4 },
-];
-const options = [
-  {
-    value: "team",
-    label: "team",
-  },
-  {
-    value: "low",
-    label: "low",
-  },
-  {
-    value: "medium",
-    label: "medium",
-  },
-  {
-    value: "high",
-    label: "high",
-  },
-  {
-    value: "update",
-    label: "update",
-  },
-];
-
-const OptionComponent = ({ data, ...props }) => {
-  //const Icon = data.icon;
-
-  return (
-    <components.Option {...props}>
-      <span className="flex items-center space-x-4">
-        <div className="flex-none">
-          <div className="h-7 w-7 rounded-full">
-            <img
-              src={data.image}
-              alt=""
-              className="w-full h-full rounded-full"
-            />
-          </div>
-        </div>
-        <span className="flex-1">{data.label}</span>
-      </span>
-    </components.Option>
-  );
-};
+import { Result } from "../Result";
+import {
+  useCreateCardCategoriesMutation,
+  usePutCardCategoriesMutation,
+} from "./cardApiSlice";
+import { useUploadMutation } from "@/store/api/image/imageApiSlice";
+import Switch from "@/components/ui/Switch";
 
 const EditCategory = () => {
-  const { editModal, editItem } = useSelector((state) => state.card);
+  const { editCategoryModal, editCategoryItem } = useSelector(
+    (state) => state.card
+  );
+  const { token } = useSelector((state) => state.auth);
+  console.log("token inside modal add card", token);
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+
+  const [putCardCategories] = usePutCardCategoriesMutation();
+  const [upload, { isLoading }] = useUploadMutation();
 
   const FormValidationSchema = yup
     .object({
-      name: yup.string().required("Name is required"),
-      assign: yup.mixed().required("Assignee is required"),
-      startDate: yup
-        .date()
-        .required("Start date is required")
-        .min(new Date(), "Start date must be greater than today"),
-      endDate: yup
-        .date()
-        .required("End date is required")
-        .min(new Date(), "End date must be greater than today"),
+      name: yup.string().required("Category name is required"),
+      is_active: yup.boolean().required("Is Active is required"),
+      icon_url: yup.string(),
     })
     .required();
 
@@ -111,174 +42,113 @@ const EditCategory = () => {
     reset,
     formState: { errors },
     handleSubmit,
+    setValue,
+    getValues,
   } = useForm({
     resolver: yupResolver(FormValidationSchema),
-
     mode: "all",
+    defaultValues: editCategoryItem,
   });
-
   useEffect(() => {
-    reset(editItem);
-  }, [editItem]);
+    if (editCategoryItem) {
+      setValue("name", editCategoryItem.name);
+      setValue("is_active", editCategoryItem.is_active);
+    }
+  }, [editCategoryItem]);
 
-  const onSubmit = (data) => {
-    dispatch(
-      updateCard({
-        id: editItem.id,
-        name: data.name,
-        des: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        assignee: data.assign,
-        category: null,
-        startDate: startDate.toISOString().split("T")[0],
-        endDate: endDate.toISOString().split("T")[0],
-        progress: Math.floor(Math.random() * (100 - 10 + 1) + 10),
-      })
-    );
-    dispatch(toggleEditModal(false));
-    toast.info("Edit Successfully", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+  console.log("errors", errors);
+  console.log("editCategoryItem", editCategoryItem);
+
+  const onSubmit = async (data) => {
+    try {
+      console.log("data", data);
+      const { name, is_active } = data;
+      const card = {
+        id: editCategoryItem.id,
+        name,
+        icon_url: editCategoryItem.icon_url,
+        is_active: is_active,
+      };
+
+      console.log("edit card", card);
+      const response = await putCardCategories(card);
+      console.log("response edit card", response.data);
+      toast.success("Edit Category Successful");
+      dispatch(toggleEditCategoryModal(false));
+      reset();
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
+  // const handleFileUpload = async (event) => {
+  //   console.log("file event", event.target.files[0]);
+  //   setStatus("uploading");
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("image", event.target.files[0]);
+  //     const response = await upload(formData);
+  //     console.log("image upload success", response.data);
+
+  //     if (!response.data.status) {
+  //       throw new Error("Failed to upload image");
+  //     }
+
+  //     setValue("icon_url", response.data.data, { shouldValidate: true });
+  //     setStatus("success");
+  //   } catch (error) {
+  //     console.error(error);
+  //     setStatus("fail");
+  //   }
+  // };
+
+  console.log("edit value", getValues());
+
   return (
-    <Modal
-      title="Edit Project"
-      activeModal={editModal}
-      onClose={() => dispatch(toggleEditModal(false))}
-    >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
-        <FormGroup error={errors.name}>
-          <input
-            type="text"
-            defaultValue={editItem.name}
-            className="form-control py-2"
-            {...register("name")}
+    <div>
+      <Modal
+        title="Edit Card Category"
+        labelclassName="btn-outline-dark"
+        activeModal={editCategoryModal}
+        onClose={() => dispatch(toggleEditCategoryModal(false))}
+      >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
+          <Textinput
+            name="name"
+            label="Category Name"
+            placeholder="Category Name"
+            register={register}
+            error={errors.name}
           />
-        </FormGroup>
-        <div className="grid lg:grid-cols-2 gap-4 grid-cols-1">
-          <FormGroup
-            label="Start Date"
-            id="default-picker"
-            error={errors.startDate}
-          >
-            <Controller
-              name="startDate"
-              control={control}
-              render={({ field }) => (
-                <Flatpickr
-                  className="form-control py-2"
-                  id="default-picker"
-                  placeholder="yyyy, dd M"
-                  value={startDate}
-                  onChange={(date) => {
-                    field.onChange(date);
-                  }}
-                  options={{
-                    altInput: true,
-                    altFormat: "F j, Y",
-                    dateFormat: "Y-m-d",
-                  }}
-                />
-              )}
-            />
-          </FormGroup>
-          <FormGroup
-            label="End Date"
-            id="default-picker2"
-            error={errors.endDate}
-          >
-            <Controller
-              name="endDate"
-              control={control}
-              render={({ field }) => (
-                <Flatpickr
-                  className="form-control py-2"
-                  id="default-picker2"
-                  placeholder="yyyy, dd M"
-                  value={endDate}
-                  onChange={(date) => {
-                    field.onChange(date);
-                  }}
-                  options={{
-                    altInput: true,
-                    altFormat: "F j, Y",
-                    dateFormat: "Y-m-d",
-                  }}
-                />
-              )}
-            />
-          </FormGroup>
-        </div>
-        <div className={errors.assign ? "has-error" : ""}>
-          <label className="form-label" htmlFor="icon_s">
-            Assignee
-          </label>
           <Controller
-            name="assign"
+            name="is_active"
             control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={assigneeOptions}
-                styles={styles}
-                className="react-select"
-                classNamePrefix="select"
-                isSearchable={false}
-                defaultValue={editItem.assignee}
-                isMulti
-                components={{
-                  Option: OptionComponent,
-                }}
-                id="icon_s"
+            render={({ field: { onChange, value } }) => (
+              <Switch
+                label={"Enable Category?"}
+                value={value}
+                onChange={onChange}
               />
             )}
           />
-          {errors.assign && (
-            <div className=" mt-2  text-danger-500 block text-sm">
-              {errors.assign?.message || errors.assign?.label.message}
+          {/* <input type="file" onChange={handleFileUpload} /> */}
+          {/* <Result status={status} /> */}
+          {errors?.icon_url && (
+            <div className={` mt-2 text-danger-500 block text-sm `}>
+              {errors?.icon_url?.message}
             </div>
           )}
-        </div>
-
-        <div className={errors.tags ? "has-error" : ""}>
-          <label className="form-label" htmlFor="icon_s">
-            Tag
-          </label>
-          <Controller
-            name="tags"
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={options}
-                styles={styles}
-                className="react-select"
-                classNamePrefix="select"
-                isMulti
-                id="icon_s"
-              />
-            )}
-          />
-          {errors.assign && (
-            <div className=" mt-2  text-danger-500 block text-sm">
-              {errors.tags?.message || errors.tags?.label.message}
-            </div>
-          )}
-        </div>
-        <Textarea label="Description" placeholder="Description" />
-
-        <div className="ltr:text-right rtl:text-left">
-          <button className="btn btn-dark  text-center">Update</button>
-        </div>
-      </form>
-    </Modal>
+          <div className="ltr:text-right rtl:text-left">
+            <Button
+              type="submit"
+              text="Add Category"
+              className="btn btn-dark block w-full text-center "
+              isLoading={isLoading}
+            />
+          </div>
+        </form>
+      </Modal>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import Icon from "@/components/ui/Icon";
 
-const Swicth = ({
+const Switch = ({
   prevIcon,
   nextIcon,
   label,
@@ -14,6 +14,7 @@ const Swicth = ({
   labelClass = "text-slate-500 dark:text-slate-400 text-sm leading-6",
   badge,
 }) => {
+  console.log('switch value', value)
   return (
     <div>
       <label
@@ -74,4 +75,4 @@ const Swicth = ({
   );
 };
 
-export default Swicth;
+export default Switch;

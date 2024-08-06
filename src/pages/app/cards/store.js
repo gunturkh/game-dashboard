@@ -14,7 +14,8 @@ export const appCardSlice = createSlice({
     openCategoryModal: false,
     isLoading: null,
     editItem: {},
-    editModal: false,
+    editCategoryItem: {},
+    editCategoryModal: false,
     editCardModal: false,
     cards: [
       {
@@ -91,8 +92,12 @@ export const appCardSlice = createSlice({
     toggleAddCardModal: (state, action) => {
       state.openCardModal = action.payload;
     },
-    toggleEditModal: (state, action) => {
-      state.editModal = action.payload;
+    toggleEditCategoryModal: (state, action) => {
+      state.editCategoryModal = action.payload;
+    },
+    setEditCategoryItem: (state, action) => {
+      state.editCategoryModal = !state.editCategoryModal
+      state.editCategoryItem = action.payload
     },
     pushProject: (state, action) => {
       state.cards.unshift(action.payload);
@@ -154,7 +159,8 @@ export const {
   toggleAddModal,
   toggleAddCardModal,
   removeCard,
-  toggleEditModal,
+  toggleEditCategoryModal,
+  setEditCategoryItem,
   updateCard,
 } = appCardSlice.actions;
 export default appCardSlice.reducer;
