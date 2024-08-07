@@ -62,9 +62,9 @@ const CardPostPage = () => {
 
   console.log("getCards", getCards);
   console.log("getCardCategories", getCardCategories);
-  const sortedCardCategories = []
-    .concat(getCardCategories)
-    .sort((a, b) => a.id - b.id);
+  // const sortedCardCategories = []
+  //   .concat(getCardCategories)
+  //   .sort((a, b) => a.id - b.id);
   return (
     <div>
       <ToastContainer />
@@ -125,14 +125,14 @@ const CardPostPage = () => {
 
       {filler === "grid" && !isLoaded && (
         <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
-          {sortedCardCategories?.map((card, cardIndex) => (
+          {getCardCategories?.map((card, cardIndex) => (
             <CategoryGrid card={card} key={cardIndex} />
           ))}
         </div>
       )}
       {filler === "list" && !isLoaded && (
         <div>
-          <CategoryList cards={sortedCardCategories} />
+          <CategoryList cards={getCardCategories} />
         </div>
       )}
       <AddCategory />
