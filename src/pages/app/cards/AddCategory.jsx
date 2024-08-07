@@ -26,7 +26,7 @@ const AddCategory = () => {
   const FormValidationSchema = yup
     .object({
       name: yup.string().required("Category name is required"),
-      icon_url: yup.string().required("Category image is required"),
+      // icon_url: yup.string().required("Category image is required"),
     })
     .required();
 
@@ -49,7 +49,7 @@ const AddCategory = () => {
       const { name, icon_url } = data;
       const card = {
         name,
-        icon_url,
+        icon_url: "string",
       };
 
       const response = await createCardCategories(card);
@@ -99,8 +99,8 @@ const AddCategory = () => {
             register={register}
             error={errors.name}
           />
-          <input type="file" onChange={handleFileUpload} />
-          <Result status={status} />
+          {/* <input type="file" onChange={handleFileUpload} />
+          <Result status={status} /> */}
           {errors?.icon_url && (
             <div className={` mt-2 text-danger-500 block text-sm `}>
               {errors?.icon_url?.message}
