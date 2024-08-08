@@ -48,7 +48,7 @@ const LoginForm = () => {
       }
 
       dispatch(setUser(data));
-      dispatch(setToken(response.data.token));
+      dispatch(setToken(response?.data?.token));
       navigate("/dashboard");
       console.log("response", response);
       localStorage.setItem("token", JSON.stringify(response.data.token));

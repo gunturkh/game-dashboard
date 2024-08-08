@@ -23,13 +23,22 @@ const CategoryDetailsPage = () => {
     data: getCards,
     isLoading,
     isFetching,
+    isError,
+    error,
   } = useGetCardsQuery(id, {
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
     skip: false,
   });
-  console.log("getCards", getCards);
+  console.log("getCards", getCards, error);
 
+  useEffect(() => {
+    if (isError && error?.status === 401) {
+      toast.error("Session expired, please relogin");
+      localStorage.removeItem("token");
+      navigate("/");
+    }
+  }, [error]);
   return (
     <div className=" space-y-5">
       <div className="grid grid-cols-12 gap-5"></div>
@@ -51,9 +60,11 @@ const CategoryDetailsPage = () => {
                 onClick={() => dispatch(toggleAddCardModal(true))}
               />
             </div>
-            <Card title="Cards" noborder>
-              <CardsTable cardsData={getCards} />
-            </Card>
+            {getCards && (
+              <Card title="Cards" noborder>
+                <CardsTable cardsData={getCards} />
+              </Card>
+            )}
           </div>
         </div>
       )}

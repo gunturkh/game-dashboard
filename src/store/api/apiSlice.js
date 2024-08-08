@@ -8,8 +8,11 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     prepareHeaders: (headers, { getState }) => {
+      let token = null
       console.log('getState', getState())
-      const token = JSON.parse(localStorage.getItem('token'))
+      if (localStorage.getItem('token')) {
+        token = JSON.parse(localStorage.getItem('token'))
+      }
       if (token) {
         // include token in req header
         headers.set('Authorization', `Bearer ${token}`)

@@ -84,7 +84,13 @@ export const menuItems = [
   //   icon: "heroicons-outline:clipboard-check",
   //   link: "todo",
   // },
-
+  
+  {
+    title: "Levels",
+    icon: "heroicons-outline:view-boards",
+    link: "levels",
+    isHide: true,
+  },
   {
     title: "Cards",
     icon: "heroicons-outline:document",
