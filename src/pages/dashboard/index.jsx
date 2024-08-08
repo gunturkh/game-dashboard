@@ -20,12 +20,22 @@ const Dashboard = () => {
     data: getDashboard,
     isLoading,
     isFetching,
+    error,
+    isError,
   } = useGetDashboardQuery(undefined, {
     pollingInterval: 180000,
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
     skip: false,
   });
+
+  useEffect(() => {
+    if (isError && error?.status === 401) {
+      toast.error("Session expired, please relogin");
+      localStorage.removeItem("token");
+      navigate("/");
+    }
+  }, [error]);
 
   useEffect(() => {
     setIsLoaded(true);

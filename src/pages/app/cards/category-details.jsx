@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import CardsTable from "@/components/partials/Table/cards-table";
@@ -9,10 +9,15 @@ import useWidth from "@/hooks/useWidth";
 import { toggleAddCardModal } from "./store";
 import { useDispatch } from "react-redux";
 import AddCard from "./AddCard";
+import EditCard from "./EditCard";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 const CategoryDetailsPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { width, breakpoints } = useWidth();
+  const { editCardModal } = useSelector((state) => state.card);
   console.log("categories id", id);
   const {
     data: getCards,
@@ -53,6 +58,7 @@ const CategoryDetailsPage = () => {
         </div>
       )}
       <AddCard />
+      {editCardModal && <EditCard />}
     </div>
   );
 };

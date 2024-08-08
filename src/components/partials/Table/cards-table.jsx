@@ -14,9 +14,12 @@ import {
 } from "react-table";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setEditCardItem } from "@/pages/app/cards/store";
 
 const CardsTable = ({ cardsData }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const actions = [
     {
@@ -27,6 +30,7 @@ const CardsTable = ({ cardsData }) => {
     {
       name: "edit",
       icon: "heroicons:pencil-square",
+      doit: (item)=> dispatch(setEditCardItem(item))
     },
     // {
     //   name: "delete",
@@ -133,7 +137,7 @@ const CardsTable = ({ cardsData }) => {
       columns,
       data,
       initialState: {
-        pageSize: data.length,
+        pageSize: data?.length,
       },
     },
 

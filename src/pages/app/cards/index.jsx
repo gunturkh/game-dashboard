@@ -7,12 +7,14 @@ import GridLoading from "@/components/skeleton/Grid";
 import TableLoading from "@/components/skeleton/Table";
 import { toggleAddModal } from "./store";
 import AddCategory from "./AddCategory";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import EditCategory from "./EditCategory";
 import CategoryGrid from "./CategoryGrid";
-import { useGetCardCategoriesQuery, useGetCardsQuery } from "./cardApiSlice";
+import { useGetCardCategoriesQuery } from "./cardApiSlice";
+import { useNavigate } from "react-router-dom";
 
 const CardPostPage = () => {
+  const navigate = useNavigate();
   const [filler, setfiller] = useState("grid");
   const { width, breakpoints } = useWidth();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -21,18 +23,11 @@ const CardPostPage = () => {
   console.log("cards", cards);
   const dispatch = useDispatch();
   const {
-    data: getCards,
-    isLoading: cardsLoading,
-    isFetching: cardsFetching,
-  } = useGetCardsQuery(undefined, {
-    skipPollingIfUnfocused: true,
-    refetchOnMountOrArgChange: true,
-    skip: false,
-  });
-  const {
     data: getCardCategories,
     isLoading: cardCategoriesLoading,
     isFetching: cardCategoriesFetching,
+    error,
+    isError,
   } = useGetCardCategoriesQuery(undefined, {
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
@@ -40,23 +35,17 @@ const CardPostPage = () => {
   });
 
   useEffect(() => {
+    if (isError && error?.status === 401) {
+      toast.error("Session expired, please relogin");
+      localStorage.removeItem("token");
+      navigate("/");
+    }
+  }, [error]);
+
+  useEffect(() => {
     setIsLoaded(true);
-    if (
-      !(
-        cardsFetching ||
-        cardsLoading ||
-        cardCategoriesFetching ||
-        cardCategoriesLoading
-      )
-    )
-      setIsLoaded(false);
-  }, [
-    filler,
-    cardsFetching,
-    cardsLoading,
-    cardCategoriesFetching,
-    cardCategoriesLoading,
-  ]);
+    if (!(cardCategoriesFetching || cardCategoriesLoading)) setIsLoaded(false);
+  }, [filler, cardCategoriesFetching, cardCategoriesLoading]);
 
   // console.log("getCards", getCards);
   // console.log("getCardCategories", getCardCategories);

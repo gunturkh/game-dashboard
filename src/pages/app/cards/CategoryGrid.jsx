@@ -5,8 +5,8 @@ import Dropdown from "@/components/ui/Dropdown";
 import { Menu } from "@headlessui/react";
 import Icon from "@/components/ui/Icon";
 import ProgressBar from "@/components/ui/ProgressBar";
-import { removeCard, updateCard, setEditCategoryItem } from "./store";
-import { useDispatch, useSelector } from "react-redux";
+import { removeCard, setEditCategoryItem } from "./store";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CategoryGrid = ({ card }) => {
@@ -42,7 +42,7 @@ const CategoryGrid = ({ card }) => {
           </div>
           <div className="font-medium text-base leading-6">
             <div className="dark:text-slate-200 text-slate-900 max-w-[160px] truncate">
-              {`${name} ${is_active ? '' : "(Inactive)"}`}
+              {`${name} ${is_active ? "" : "(Inactive)"}`}
             </div>
           </div>
         </div>

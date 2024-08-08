@@ -141,7 +141,7 @@ const EditCategory = () => {
           <div className="ltr:text-right rtl:text-left">
             <Button
               type="submit"
-              text="Add Category"
+              text="Edit Category"
               className="btn btn-dark block w-full text-center "
               isLoading={isLoading}
             />
