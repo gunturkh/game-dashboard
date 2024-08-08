@@ -19,7 +19,6 @@ const CategoryDetailsPage = () => {
     isLoading,
     isFetching,
   } = useGetCardsQuery(id, {
-    pollingInterval: 30000,
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
     skip: false,

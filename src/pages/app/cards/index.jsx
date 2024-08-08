@@ -25,7 +25,6 @@ const CardPostPage = () => {
     isLoading: cardsLoading,
     isFetching: cardsFetching,
   } = useGetCardsQuery(undefined, {
-    pollingInterval: 30000,
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
     skip: false,
@@ -35,7 +34,6 @@ const CardPostPage = () => {
     isLoading: cardCategoriesLoading,
     isFetching: cardCategoriesFetching,
   } = useGetCardCategoriesQuery(undefined, {
-    pollingInterval: 30000,
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
     skip: false,
@@ -60,8 +58,8 @@ const CardPostPage = () => {
     cardCategoriesLoading,
   ]);
 
-  console.log("getCards", getCards);
-  console.log("getCardCategories", getCardCategories);
+  // console.log("getCards", getCards);
+  // console.log("getCardCategories", getCardCategories);
   // const sortedCardCategories = []
   //   .concat(getCardCategories)
   //   .sort((a, b) => a.id - b.id);

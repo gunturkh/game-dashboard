@@ -15,7 +15,7 @@ import {
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-const CardsTable = ({ cardsData }) => {
+const CardDetailTable = ({ cardData }) => {
   const navigate = useNavigate();
 
   const actions = [
@@ -28,27 +28,19 @@ const CardsTable = ({ cardsData }) => {
       name: "edit",
       icon: "heroicons:pencil-square",
     },
-    // {
-    //   name: "delete",
-    //   icon: "heroicons-outline:trash",
-    // },
+    {
+      name: "delete",
+      icon: "heroicons-outline:trash",
+    },
   ];
 
   const COLUMNS = [
     {
-      Header: "name",
-      accessor: "name",
+      Header: "level",
+      accessor: "level",
       Cell: (row) => {
-        console.log("row", row);
         return (
           <span className="flex items-center min-w-[150px]">
-            <span className="w-8 h-8 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
-              <img
-                src={row?.data[row?.cell?.row?.index]?.icon_url}
-                alt={row?.cell?.value}
-                className="object-cover w-full h-full rounded-full"
-              />
-            </span>
             <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
               {row?.cell?.value}
             </span>
@@ -56,77 +48,36 @@ const CardsTable = ({ cardsData }) => {
         );
       },
     },
-
     {
-      Header: "status",
-      accessor: "is_active",
+      Header: "upgrade price",
+      accessor: "upgrade_price",
       Cell: (row) => {
         return (
-          <span className="block min-w-[140px] text-left">
-            <span className="inline-block text-center mx-auto py-1">
-              {row?.cell?.value === false && (
-                <span className="flex items-center space-x-3 rtl:space-x-reverse">
-                  <span className="h-[6px] w-[6px] bg-danger-500 rounded-full inline-block ring-4 ring-opacity-30 ring-danger-500"></span>
-                  <span>Inactive</span>
-                </span>
-              )}
-              {row?.cell?.value === true && (
-                <span className="flex items-center space-x-3 rtl:space-x-reverse">
-                  <span className="h-[6px] w-[6px] bg-success-500 rounded-full inline-block ring-4 ring-opacity-30 ring-success-500"></span>
-
-                  <span>Active</span>
-                </span>
-              )}
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
             </span>
           </span>
         );
       },
     },
     {
-      Header: "Updated AT",
-      accessor: "updated_at",
+      Header: "profit per hour",
+      accessor: "profit_per_hour",
       Cell: (row) => {
         return (
-          <span>{dayjs(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}</span>
-        );
-      },
-    },
-    {
-      Header: "action",
-      accessor: "action",
-      Cell: (row) => {
-        return (
-          <div className=" text-center">
-            <div className="grid grid-cols-[100px_100px_100px] gap-2 divide-x divide-slate-100 dark:divide-slate-800">
-              {actions.map((item, i) => (
-                <div key={i} onClick={() => item.doit(row?.row?.original)}>
-                  <div
-                    className={`
-                
-                  ${
-                    item.name === "delete"
-                      ? "bg-danger-500 text-danger-500 bg-opacity-30   hover:bg-opacity-100 hover:text-white"
-                      : "hover:bg-slate-900 hover:text-white dark:hover:bg-slate-600 dark:hover:bg-opacity-50"
-                  }
-                   w-full border border-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer 
-                   first:rounded-t last:rounded-b flex  space-x-2 items-center rtl:space-x-reverse `}
-                  >
-                    <span className="text-base">
-                      <Icon icon={item.icon} />
-                    </span>
-                    <span>{item.name}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
         );
       },
     },
   ];
 
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => cardsData, []);
+  const data = useMemo(() => cardData, []);
 
   const tableInstance = useTable(
     {
@@ -165,7 +116,7 @@ const CardsTable = ({ cardsData }) => {
 
   return (
     <>
-      <div>
+      <div className="p-2">
         <div className="overflow-x-auto -mx-6">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden ">
@@ -228,4 +179,4 @@ const CardsTable = ({ cardsData }) => {
   );
 };
 
-export default CardsTable;
+export default CardDetailTable;
