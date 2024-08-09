@@ -71,7 +71,7 @@ const LevelDetailTable = ({ levelsData }) => {
       columns,
       data,
       initialState: {
-        pageSize: data.length,
+        pageSize: data?.length,
       },
     },
 

@@ -63,7 +63,12 @@ const AddLevel = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await createLevel(data);
+      console.log("data", data);
+      const mappedData = data?.levels?.map((i) => ({
+        level: i.level,
+        minimum_score: parseInt(i.minimum_score),
+      }));
+      const response = await createLevel({ levels: mappedData });
       console.log("response create level", response.data);
       toast.success("Add Level Successful");
       dispatch(toggleAddCardModal(false));
@@ -97,7 +102,7 @@ const AddLevel = () => {
                   Level {field?.level}
                 </label>
                 <Textinput
-                  name={`levels.${index}.profit_per_hour`}
+                  name={`levels.${index}.minimum_score`}
                   label="Minimum Score"
                   placeholder="Minimum Score"
                   register={register}

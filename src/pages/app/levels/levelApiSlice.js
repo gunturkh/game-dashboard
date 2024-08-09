@@ -15,7 +15,7 @@ export const levelApi = apiSlice.injectEndpoints({
                 body: data,
             }),
             transformResponse: (response) => response.data,
-            invalidatesTags: ['Cards']
+            invalidatesTags: ['Levels']
         }),
     }),
 });
