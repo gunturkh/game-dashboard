@@ -7,52 +7,31 @@ import { useDispatch } from "react-redux";
 import LevelDetailTable from "@/components/partials/Table/level-detail-table";
 import { Tree } from "react-arborist";
 import Card from "@/components/ui/Card";
-
-export const data = [
-  { id: "1", name: "Unread" },
-  { id: "2", name: "Threads" },
-  {
-    id: "3",
-    name: "Chat Rooms",
-    children: [
-      {
-        id: "c1",
-        name: "General",
-        children: [
-          { id: "cg1", name: "Random" },
-          { id: "cg2", name: "Open Source Projects" },
-        ],
-      },
-      { id: "c2", name: "Random" },
-      { id: "c3", name: "Open Source Projects" },
-    ],
-  },
-  {
-    id: "4",
-    name: "Direct Messages",
-    children: [
-      { id: "d1", name: "Alice" },
-      { id: "d2", name: "Bob" },
-      { id: "d3", name: "Charlie" },
-    ],
-  },
-];
+import { Icon } from "@iconify/react";
 
 function Node({ node, style, dragHandle }) {
   /* This node instance can do many things. See the API reference. */
   return (
-    <div
-      style={style}
-      ref={dragHandle}
-      onClick={() => {
-        console.log("node", node);
-        node.toggle();
-      }}
-    >
-      {node.children.length > 0 ? "👥" : "👤"}{" "}
-      {`${node.data.username} ${
-        node.children.length > 0 ? `: (${node.children.length})` : ""
-      } `}
+    <div style={style} ref={dragHandle} onClick={() => node.toggle()}>
+      <div className="flex items-center gap-1 border-b border-neutral-200">
+        {node.isOpen && node.children.length > 0 ? (
+          <Icon icon="heroicons:arrow-down-solid"/>
+        ) : node.children.length > 0 ? (
+          <Icon icon="heroicons:arrow-right-solid" />
+        ) : null}
+        {node.children.length > 0 ? (
+          <Icon icon="heroicons:user-group-solid" />
+        ) : (
+          <Icon icon="heroicons:user-solid" />
+        )}{" "}
+        <span className="font-semibold">{node.data.username}</span>
+        {node.children.length > 0 && (
+          <span className="font-semibold text-green-400">
+            {" "}
+            + {node.children.length}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -88,7 +67,7 @@ function Referrals() {
     <div>
       <div className="flex flex-wrap justify-between items-center mb-4"></div>
 
-      <Card title={"Referrals"} noborder>
+      <Card title={"Referrals"} noborder bodyClass="px-6 py-1">
         <Tree
           initialData={getReferrals}
           openByDefault={false}
@@ -96,10 +75,10 @@ function Referrals() {
           idAccessor="username"
           /* or a function with the data as the argument */
           childrenAccessor={(d) => d.referral}
-          // width={600}
-          // height={1000}
+          width={"100%"}
+          height={1000}
           indent={24}
-          rowHeight={36}
+          rowHeight={30}
           paddingTop={10}
           paddingBottom={10}
           padding={25 /* sets both */}
