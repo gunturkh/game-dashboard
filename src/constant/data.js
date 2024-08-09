@@ -97,6 +97,12 @@ export const menuItems = [
     link: "categories",
     isHide: true,
   },
+  {
+    title: "Referrals",
+    icon: "heroicons-outline:user",
+    link: "referrals",
+    isHide: true,
+  },
   // {
   //   title: "Projects",
   //   icon: "heroicons-outline:document",
