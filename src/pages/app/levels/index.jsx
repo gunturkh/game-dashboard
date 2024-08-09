@@ -59,9 +59,11 @@ function Levels() {
           onClick={() => dispatch(toggleAddCardModal(true))}
         />
       </div>
-      <Card title={"Level"} noborder>
-        <LevelDetailTable levelsData={getLevels} />
-      </Card>
+      {getLevels && (
+        <Card title={"Level"} noborder>
+          <LevelDetailTable levelsData={getLevels} />
+        </Card>
+      )}
       <AddLevel />
     </div>
   );
