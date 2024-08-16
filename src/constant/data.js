@@ -98,6 +98,12 @@ export const menuItems = [
     isHide: true,
   },
   {
+    title: "Players",
+    icon: "heroicons-outline:user",
+    link: "players",
+    isHide: true,
+  },
+  {
     title: "Referrals",
     icon: "heroicons-outline:user",
     link: "referrals",

@@ -110,11 +110,10 @@ const CardPostPage = lazy(() => import("./pages/app/cards"));
 const CategoryDetailsPage = lazy(() =>
   import("./pages/app/cards/category-details")
 );
-const CardDetailsPage = lazy(() =>
-  import("./pages/app/cards/card-details")
-);
+const CardDetailsPage = lazy(() => import("./pages/app/cards/card-details"));
 
 const LevelPostPage = lazy(() => import("./pages/app/levels"));
+const PlayersPostPage = lazy(() => import("./pages/app/players"));
 const ReferralsPostPage = lazy(() => import("./pages/app/referrals"));
 
 const KanbanPage = lazy(() => import("./pages/app/kanban"));
@@ -172,6 +171,7 @@ function App() {
           <Route path={"categories/:id"} element={<CategoryDetailsPage />} />
           <Route path={"card/:id"} element={<CardDetailsPage />} />
           <Route path="levels" element={<LevelPostPage />} />
+          <Route path="players" element={<PlayersPostPage />} />
           <Route path="referrals" element={<ReferralsPostPage />} />
           <Route path="kanban" element={<KanbanPage />} />
           <Route path="calender" element={<CalenderPage />} />

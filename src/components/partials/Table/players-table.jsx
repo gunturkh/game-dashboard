@@ -14,45 +14,17 @@ import {
 } from "react-table";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setEditCardItem } from "@/pages/app/cards/store";
 
-const CardsTable = ({ cardsData }) => {
+const PlayersTable = ({ playersData }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-
-  const actions = [
-    {
-      name: "view",
-      icon: "heroicons-outline:eye",
-      doit: (item) => navigate(`/card/${item.id}`),
-    },
-    {
-      name: "edit",
-      icon: "heroicons:pencil-square",
-      doit: (item)=> dispatch(setEditCardItem(item))
-    },
-    // {
-    //   name: "delete",
-    //   icon: "heroicons-outline:trash",
-    // },
-  ];
 
   const COLUMNS = [
     {
-      Header: "name",
-      accessor: "name",
+      Header: "User Name",
+      accessor: "username",
       Cell: (row) => {
-        console.log("row", row);
         return (
           <span className="flex items-center min-w-[150px]">
-            <span className="w-8 h-8 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
-              <img
-                src={row?.data[row?.cell?.row?.index]?.icon_url}
-                alt={row?.cell?.value}
-                className="object-cover w-full h-full rounded-full"
-              />
-            </span>
             <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
               {row?.cell?.value}
             </span>
@@ -60,77 +32,154 @@ const CardsTable = ({ cardsData }) => {
         );
       },
     },
-
     {
-      Header: "status",
-      accessor: "is_active",
+      Header: "First Name",
+      accessor: "first_name",
       Cell: (row) => {
         return (
-          <span className="block min-w-[140px] text-left">
-            <span className="inline-block text-center mx-auto py-1">
-              {row?.cell?.value === false && (
-                <span className="flex items-center space-x-3 rtl:space-x-reverse">
-                  <span className="h-[6px] w-[6px] bg-danger-500 rounded-full inline-block ring-4 ring-opacity-30 ring-danger-500"></span>
-                  <span>Inactive</span>
-                </span>
-              )}
-              {row?.cell?.value === true && (
-                <span className="flex items-center space-x-3 rtl:space-x-reverse">
-                  <span className="h-[6px] w-[6px] bg-success-500 rounded-full inline-block ring-4 ring-opacity-30 ring-success-500"></span>
-
-                  <span>Active</span>
-                </span>
-              )}
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
             </span>
           </span>
         );
       },
     },
     {
-      Header: "Updated AT",
-      accessor: "updated_at_unix",
+      Header: "Last Name",
+      accessor: "last_name",
       Cell: (row) => {
         return (
-          <span>{dayjs.unix(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}</span>
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
         );
       },
     },
     {
-      Header: "action",
-      accessor: "action",
+      Header: "Register Date",
+      accessor: "created_at_unix",
       Cell: (row) => {
         return (
-          <div className=" text-center">
-            <div className="grid grid-cols-[100px_100px_100px] gap-2 divide-x divide-slate-100 dark:divide-slate-800">
-              {actions.map((item, i) => (
-                <div key={i} onClick={() => item.doit(row?.row?.original)}>
-                  <div
-                    className={`
-                
-                  ${
-                    item.name === "delete"
-                      ? "bg-danger-500 text-danger-500 bg-opacity-30   hover:bg-opacity-100 hover:text-white"
-                      : "hover:bg-slate-900 hover:text-white dark:hover:bg-slate-600 dark:hover:bg-opacity-50"
-                  }
-                   w-full border border-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer 
-                   first:rounded-t last:rounded-b flex  space-x-2 items-center rtl:space-x-reverse `}
-                  >
-                    <span className="text-base">
-                      <Icon icon={item.icon} />
-                    </span>
-                    <span>{item.name}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {dayjs.unix(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}
+              {/* {row?.cell?.value} */}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Referee",
+      accessor: "referee_id",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Referral Code",
+      accessor: "referral_code",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Level",
+      accessor: "level",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Points Balance",
+      accessor: "points_balance",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Points Total",
+      accessor: "points_total",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Profit per Hour",
+      accessor: "profit_per_hour",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Spending Amount",
+      accessor: "spending_amount",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Cards Bought",
+      accessor: "upgraded_card_cnt",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
         );
       },
     },
   ];
 
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => cardsData, []);
+  const data = useMemo(() => playersData, []);
 
   const tableInstance = useTable(
     {
@@ -169,7 +218,7 @@ const CardsTable = ({ cardsData }) => {
 
   return (
     <>
-      <div>
+      <div className="p-2">
         <div className="overflow-x-auto -mx-6">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden ">
@@ -232,4 +281,4 @@ const CardsTable = ({ cardsData }) => {
   );
 };
 
-export default CardsTable;
+export default PlayersTable;
