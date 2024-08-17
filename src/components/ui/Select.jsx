@@ -62,19 +62,21 @@ const Select = ({
             <option value="" disabled>
               {placeholder}
             </option>
-            {options.map((option, i) => (
-              <Fragment key={i}>
-                {option.value && option.label ? (
-                  <option key={i} value={option.value}>
-                    {option.label}
-                  </option>
-                ) : (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                )}
-              </Fragment>
-            ))}
+            {options.map((option, i) => {
+              return (
+                <Fragment key={i}>
+                  {option.value && option.label ? (
+                    <option key={i} value={option.value}>
+                      {option.label}
+                    </option>
+                  ) : (
+                    <option key={i} value={option}>
+                      {option}
+                    </option>
+                  )}
+                </Fragment>
+              );
+            })}
           </select>
         )}
         {!name && (

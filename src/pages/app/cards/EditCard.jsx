@@ -13,6 +13,7 @@ import { Result } from "../Result";
 import {
   useCreateCardMutation,
   useGetCardByIdQuery,
+  useGetCardsQuery,
   usePutCardMutation,
 } from "./cardApiSlice";
 import { useUploadMutation } from "@/store/api/image/imageApiSlice";
@@ -20,6 +21,8 @@ import { useParams } from "react-router-dom";
 import Icons from "@/components/ui/Icon";
 import { useEffect } from "react";
 import LoaderCircle from "@/components/Loader-circle";
+import Select from "@/components/ui/Select";
+import { API_URL } from "@/store/api/apiSlice";
 
 const EditCard = () => {
   const { id } = useParams();
@@ -29,6 +32,18 @@ const EditCard = () => {
   console.log("token inside modal add card", token);
   const dispatch = useDispatch();
   const [status, setStatus] = useState("initial");
+  const { data: getCards } = useGetCardsQuery(undefined, {
+    skipPollingIfUnfocused: true,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
+  const [conditionCardLevelOptions, setConditionCardLevelOptions] =
+    useState(null);
+
+  const [
+    conditionCardLevelOptionsLoading,
+    setConditionCardLevelOptionsLoading,
+  ] = useState(false);
 
   const [putCard] = usePutCardMutation();
   const [upload, { isLoading }] = useUploadMutation();
@@ -40,6 +55,15 @@ const EditCard = () => {
       skip: false,
     }
   );
+  const conditionOptions = (cards) => {
+    if (!cards || cards?.length === 0) {
+      return "-";
+    }
+    if (cards?.length > 0) {
+      const options = getCards.map((c) => ({ value: c.id, label: c.name }));
+      return [{ value: "null", label: "empty" }, ...options];
+    } else return [{ value: 0, label: "null" }];
+  };
 
   const FormValidationSchema = yup
     .object({
@@ -56,11 +80,16 @@ const EditCard = () => {
     handleSubmit,
     getValues,
     setValue,
+    watch,
   } = useForm({
     defaultValues: getCardById,
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
   });
+  const initialConditionValue = watch("initialCondition");
+  const conditionValue = watch("condition");
+  console.log("conditionValue", conditionValue);
+  console.log("watch level", watch("condition-level"));
   console.log("editCardItem", editCardItem);
   console.log("getCardById edit card", getCardById);
 
@@ -71,9 +100,53 @@ const EditCard = () => {
       setValue("icon_url", getCardById.icon_url);
       setValue("is_active", getCardById.is_active);
       setValue("requirements", getCardById.requirements);
+      setValue("initialCondition", getCardById.condition);
+      setValue("condition", getCardById.condition?.id);
+      setValue("conditionLevel", getCardById.condition?.level);
       setStatus("uploaded");
     }
   }, [getCardById]);
+
+  useEffect(() => {
+    const getCardLevelByCardConditionId = async (id) => {
+      try {
+        setConditionCardLevelOptionsLoading(true);
+        const token = JSON.parse(localStorage.getItem("token"));
+        const response = await fetch(`${API_URL}/admin/cards/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const result = await response.json();
+        // console.log("response", result);
+        if (result.status) {
+          const data = result.data;
+          const options = data.levels?.map((l) => ({
+            value: l.level,
+            label: l.level,
+          }));
+          setConditionCardLevelOptions(options);
+          setConditionCardLevelOptionsLoading(false);
+        } else setConditionCardLevelOptionsLoading(false);
+      } catch (error) {
+        setConditionCardLevelOptionsLoading(false);
+        console.log("error.message", error.message);
+      }
+    };
+
+    if (
+      conditionValue !== null &&
+      conditionValue !== undefined &&
+      conditionValue !== "" &&
+      conditionValue !== "null"
+    ) {
+      getCardLevelByCardConditionId(conditionValue);
+    }
+    if (conditionValue === null || conditionValue === "null") {
+      setConditionCardLevelOptions(null);
+      setValue("conditionLevel", 1);
+    }
+  }, [conditionValue]);
 
   const { fields, append, remove, swap } = useFieldArray({
     control,
@@ -84,7 +157,7 @@ const EditCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, icon_url, levels } = data;
+      const { name, icon_url, levels, condition, conditionLevel } = data;
       const card = {
         id: getCardById.id,
         name,
@@ -94,6 +167,14 @@ const EditCard = () => {
           profit_per_hour: parseInt(l.profit_per_hour),
           upgrade_price: parseInt(l.upgrade_price),
         })),
+        ...(condition &&
+          condition !== "null" &&
+          conditionLevel && {
+            condition: {
+              card_id: parseInt(condition),
+              level: parseInt(conditionLevel),
+            },
+          }),
       };
 
       const response = await putCard(card);
@@ -101,7 +182,7 @@ const EditCard = () => {
       console.log("edit card", card);
       if (response?.data) {
         dispatch(toggleEditCardModal(false));
-        toast.success("Add Card Successful");
+        toast.success("Edit Card Successful");
         setStatus("initial");
       } else if (response?.error?.data) {
         throw new Error(response.error.data.message);
@@ -187,12 +268,34 @@ const EditCard = () => {
                 <Result status={status} />
               </>
             )}
+            {errors?.icon_url && (
+              <div className={` mt-2 text-danger-500 block text-sm `}>
+                {errors?.icon_url?.message}
+              </div>
+            )}
+            <Select
+              name={"condition"}
+              label={"condition"}
+              register={register}
+              placeholder="Condition to buy card"
+              defaultValue={initialConditionValue?.id}
+              options={conditionOptions(getCards)}
+            />
+            {conditionCardLevelOptionsLoading ? (
+              <p>Loading...</p>
+            ) : (
+              conditionCardLevelOptions && (
+                <Select
+                  name={"conditionLevel"}
+                  label={"condition level"}
+                  register={register}
+                  placeholder="Level Condition to buy card"
+                  defaultValue={initialConditionValue?.level}
+                  options={conditionCardLevelOptions}
+                />
+              )
+            )}
             <div className="w-full">
-              {errors?.icon_url && (
-                <div className={` mt-2 text-danger-500 block text-sm `}>
-                  {errors?.icon_url?.message}
-                </div>
-              )}
               {fields.map((field, index) => (
                 <div
                   key={field.id}

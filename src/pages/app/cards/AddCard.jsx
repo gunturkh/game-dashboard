@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "@/components/ui/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleAddCardModal } from "./store";
@@ -10,10 +10,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { Result } from "../Result";
-import { useCreateCardMutation } from "./cardApiSlice";
+import {
+  useCreateCardMutation,
+  useGetCardByIdQuery,
+  useGetCardsQuery,
+} from "./cardApiSlice";
 import { useUploadMutation } from "@/store/api/image/imageApiSlice";
 import { useParams } from "react-router-dom";
 import Icons from "@/components/ui/Icon";
+import Select from "@/components/ui/Select";
+import { API_URL } from "@/store/api/apiSlice";
 
 const AddCard = () => {
   const { id } = useParams();
@@ -26,6 +32,30 @@ const AddCard = () => {
 
   const [createCard] = useCreateCardMutation();
   const [upload, { isLoading }] = useUploadMutation();
+  const { data: getCards } = useGetCardsQuery(undefined, {
+    skipPollingIfUnfocused: true,
+    refetchOnMountOrArgChange: true,
+    skip: false,
+  });
+  const [conditionCardLevelOptions, setConditionCardLevelOptions] =
+    useState(null);
+
+  const [
+    conditionCardLevelOptionsLoading,
+    setConditionCardLevelOptionsLoading,
+  ] = useState(false);
+
+  const conditionOptions = (cards) => {
+    if (!cards || cards?.length === 0) {
+      return "-";
+    }
+    if (cards?.length > 0) {
+      const options = getCards.map((c) => ({ value: c.id, label: c.name }));
+      return [{ value: "null", label: "empty" }, ...options];
+    } else return [{ value: 0, label: "null" }];
+  };
+  console.log("getCards", getCards);
+  console.log("conditionOptions(getCards)", conditionOptions(getCards));
 
   const FormValidationSchema = yup
     .object({
@@ -41,6 +71,7 @@ const AddCard = () => {
     formState: { errors },
     handleSubmit,
     setValue,
+    watch,
   } = useForm({
     defaultValues: {
       levels: [
@@ -53,6 +84,50 @@ const AddCard = () => {
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
   });
+  const conditionValue = watch("condition");
+  console.log("conditionValue", conditionValue);
+  console.log("watch level", watch("condition-level"));
+
+  useEffect(() => {
+    const getCardLevelByCardConditionId = async (id) => {
+      try {
+        setConditionCardLevelOptionsLoading(true);
+        const token = JSON.parse(localStorage.getItem("token"));
+        const response = await fetch(`${API_URL}/admin/cards/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const result = await response.json();
+        // console.log("response", result);
+        if (result.status) {
+          const data = result.data;
+          const options = data.levels?.map((l) => ({
+            value: l.level,
+            label: l.level,
+          }));
+          setConditionCardLevelOptions(options);
+          setConditionCardLevelOptionsLoading(false);
+        } else setConditionCardLevelOptionsLoading(false);
+      } catch (error) {
+        setConditionCardLevelOptionsLoading(false);
+        console.log("error.message", error.message);
+      }
+    };
+
+    if (
+      conditionValue !== null &&
+      conditionValue !== undefined &&
+      conditionValue !== "" &&
+      conditionValue !== "null"
+    ) {
+      getCardLevelByCardConditionId(conditionValue);
+    }
+    if (conditionValue === null || conditionValue === "null") {
+      setConditionCardLevelOptions(null);
+      setValue("conditionLevel", 1);
+    }
+  }, [conditionValue]);
 
   const { fields, append, remove, swap } = useFieldArray({
     control,
@@ -63,7 +138,7 @@ const AddCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, icon_url, levels } = data;
+      const { name, icon_url, levels, condition, conditionLevel } = data;
       const card = {
         name,
         icon_url,
@@ -72,7 +147,16 @@ const AddCard = () => {
           profit_per_hour: parseInt(l.profit_per_hour),
           upgrade_price: parseInt(l.upgraded_price),
         })),
+        ...(condition &&
+          condition !== "null" &&
+          conditionLevel && {
+            condition: {
+              card_id: parseInt(condition),
+              level: parseInt(conditionLevel),
+            },
+          }),
       };
+      console.log("card", card);
 
       const response = await createCard(card);
       console.log("response create card", response);
@@ -113,6 +197,7 @@ const AddCard = () => {
     }
   };
 
+  console.log("conditionCardLevelOptions", conditionCardLevelOptions);
   return (
     <div>
       <Modal
@@ -137,12 +222,34 @@ const AddCard = () => {
           </label>
           <input type="file" onChange={handleFileUpload} />
           <Result status={status} />
+          {errors?.icon_url && (
+            <div className={` mt-2 text-danger-500 block text-sm `}>
+              {errors?.icon_url?.message}
+            </div>
+          )}
+          <Select
+            name={"condition"}
+            label={"condition"}
+            register={register}
+            placeholder="Condition to buy card"
+            defaultValue={null}
+            options={conditionOptions(getCards)}
+          />
+          {conditionCardLevelOptionsLoading ? (
+            <p>Loading...</p>
+          ) : (
+            conditionCardLevelOptions && (
+              <Select
+                name={"conditionLevel"}
+                label={"condition level"}
+                register={register}
+                placeholder="Level Condition to buy card"
+                defaultValue={1}
+                options={conditionCardLevelOptions}
+              />
+            )
+          )}
           <div className="w-full">
-            {errors?.icon_url && (
-              <div className={` mt-2 text-danger-500 block text-sm `}>
-                {errors?.icon_url?.message}
-              </div>
-            )}
             {fields.map((field, index) => (
               <div
                 key={field.id}

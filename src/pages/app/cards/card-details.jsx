@@ -67,10 +67,26 @@ const CardDetailsPage = () => {
                 </span>
               </header>
 
-              <div className="text-slate-600 dark:text-slate-400 text-sm pt-4 pb-8">
-                Requirements: {getCardById?.requirements || "null"}
+              <div className="flex flex-col gap-1 py-4">
+                <div className="text-slate-600 dark:text-slate-400 text-sm">
+                  Requirements: {`${!getCardById?.condition ? "Empty" : ""}`}
+                </div>
+                {getCardById?.condition && (
+                  <>
+                    <div className="text-slate-600 dark:text-slate-400 text-sm">
+                      {getCardById?.condition
+                        ? `Card: ${getCardById?.condition?.name}`
+                        : "null"}
+                    </div>
+                    <div className="text-slate-600 dark:text-slate-400 text-sm">
+                      {getCardById?.condition
+                        ? `Level: ${getCardById?.condition?.level}`
+                        : "null"}
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="flex space-x-4 rtl:space-x-reverse">
+              <div className="flex space-x-4 rtl:space-x-reverse py-2">
                 {/* created date */}
                 <div>
                   <span className="block date-label">Created At</span>
