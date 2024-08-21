@@ -20,6 +20,7 @@ import { useParams } from "react-router-dom";
 import Icons from "@/components/ui/Icon";
 import Select from "@/components/ui/Select";
 import { API_URL } from "@/store/api/apiSlice";
+import { calculateValues } from "./utils";
 
 const AddCard = () => {
   const { id } = useParams();
@@ -154,8 +155,9 @@ const AddCard = () => {
         icon_url,
         category_id: parseInt(id),
         levels: levels.map((l) => ({
-          profit_per_hour: parseInt(l.profit_per_hour_increase),
-          upgrade_price: parseInt(l.upgrade_price),
+          ...l,
+          price_multiplier: parseFloat(l.price_multiplier),
+          profit_per_hour_multiplier: parseFloat(l.profit_per_hour_multiplier),
         })),
         ...(condition &&
           condition !== "null" &&
@@ -292,40 +294,6 @@ const AddCard = () => {
               );
               console.log("levelsValue", levelsValue);
 
-              function calculateValues(
-                levels,
-                initialProfit,
-                initialUpgradePrice
-              ) {
-                // Loop through each level object
-                for (let i = 0; i < levels.length; i++) {
-                  const level = levels[i];
-                  console.log("level.price_multiplier", level.price_multiplier);
-
-                  // For level 1, use the initial values
-                  if (level.level === 1) {
-                    level.upgrade_price =
-                      initialUpgradePrice * level.price_multiplier;
-                    level.profit_per_hour_increase =
-                      initialProfit * level.profit_per_hour_multiplier;
-                  } else {
-                    // For subsequent levels, use the previous level's upgrade_price and profit_per_hour_increase
-                    const previousLevel = levels[i - 1];
-                    console.log("previousLevel", previousLevel);
-                    level.upgrade_price =
-                      previousLevel.upgrade_price +
-                      previousLevel.upgrade_price *
-                        previousLevel.price_multiplier;
-                    level.profit_per_hour_increase =
-                      previousLevel.profit_per_hour_increase +
-                      previousLevel.profit_per_hour_increase *
-                        previousLevel.profit_per_hour_multiplier;
-                  }
-                }
-
-                return levels;
-              }
-
               const updatedLevels = calculateValues(
                 levelsValue,
                 initialProfitPerHour,
@@ -333,7 +301,6 @@ const AddCard = () => {
               );
               console.log("updatedLevels", updatedLevels);
               setValue("levels", updatedLevels);
-              // const modifiedLevelsValue =
             }}
           >
             Preview Card Prices
@@ -379,7 +346,7 @@ const AddCard = () => {
                   type={"number"}
                 />
                 <Textinput
-                  name={`levels.${index}.profit_per_hour_increase`}
+                  name={`levels.${index}.profit_per_hour`}
                   label="Profit per Hour"
                   classLabel="text-xs font-semibold"
                   placeholder="Profit per Hour"
@@ -423,7 +390,17 @@ const AddCard = () => {
             <button
               className="flex w-full justify-center bg-slate-600 font-semibold text-white my-4 py-2 rounded-md"
               type="button"
-              onClick={() => append({ upgraded_price: 0, profit_per_hour: 0 })}
+              onClick={() =>
+                append({
+                  level: fields.length + 1,
+                  upgrade_price: 0,
+                  profit_per_hour_increase: 0,
+                  profit_per_hour: 0,
+                  price_multiplier: 0.5,
+                  profit_per_hour_multiplier: 0.1,
+                  respawn_time: 0,
+                })
+              }
             >
               Add New Level
             </button>
