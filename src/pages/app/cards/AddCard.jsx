@@ -64,6 +64,19 @@ const AddCard = () => {
     })
     .required();
 
+  const defaultLevelValue = [];
+  for (let index = 0; index <= 24; index++) {
+    defaultLevelValue.push({
+      level: index + 1,
+      upgrade_price: 0,
+      profit_per_hour_increase: 0,
+      profit_per_hour: 0,
+      price_multiplier: 0.5,
+      profit_per_hour_multiplier: 0.1,
+      respawn_time: 0,
+    });
+  }
+
   const {
     register,
     control,
@@ -74,12 +87,7 @@ const AddCard = () => {
     watch,
   } = useForm({
     defaultValues: {
-      levels: [
-        {
-          upgraded_price: 0,
-          profit_per_hour: 0,
-        },
-      ],
+      levels: defaultLevelValue,
     },
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
@@ -87,6 +95,7 @@ const AddCard = () => {
   const conditionValue = watch("condition");
   console.log("conditionValue", conditionValue);
   console.log("watch level", watch("condition-level"));
+  console.log("defaultLevelValue", defaultLevelValue);
 
   useEffect(() => {
     const getCardLevelByCardConditionId = async (id) => {
@@ -134,6 +143,7 @@ const AddCard = () => {
     name: "levels",
   });
   console.log("errors", errors);
+  console.log("levels", watch("levels"));
 
   const onSubmit = async (data) => {
     try {
@@ -144,8 +154,8 @@ const AddCard = () => {
         icon_url,
         category_id: parseInt(id),
         levels: levels.map((l) => ({
-          profit_per_hour: parseInt(l.profit_per_hour),
-          upgrade_price: parseInt(l.upgraded_price),
+          profit_per_hour: parseInt(l.profit_per_hour_increase),
+          upgrade_price: parseInt(l.upgrade_price),
         })),
         ...(condition &&
           condition !== "null" &&
@@ -198,9 +208,11 @@ const AddCard = () => {
   };
 
   console.log("conditionCardLevelOptions", conditionCardLevelOptions);
+  console.log("watch(nominal)", watch("nominal"));
   return (
     <div>
       <Modal
+        className="max-w-6xl"
         title="Create Card"
         labelclassName="btn-outline-dark"
         activeModal={openCardModal}
@@ -249,34 +261,135 @@ const AddCard = () => {
               />
             )
           )}
+          <Textinput
+            name="nominal"
+            label="Initial Nominal"
+            placeholder="Initial Nominal"
+            register={register}
+            error={errors.name}
+            type={"number"}
+          />
+          <Textinput
+            name="profitperhour"
+            label="Initial Profit/Hour"
+            placeholder="Initial Profit/Hour"
+            register={register}
+            error={errors.name}
+            type={"number"}
+          />
+          <button
+            className="flex w-full justify-center bg-green-600 font-semibold text-white my-4 py-2 rounded-md"
+            type="button"
+            onClick={() => {
+              const initialNominal = watch("nominal");
+              const initialProfitPerHour = watch("profitperhour");
+              const levelsValue = watch("levels");
+              console.log("nominal", initialNominal, typeof initialNominal);
+              console.log(
+                "profitperhour",
+                initialProfitPerHour,
+                typeof initialProfitPerHour
+              );
+              console.log("levelsValue", levelsValue);
+
+              function calculateValues(
+                levels,
+                initialProfit,
+                initialUpgradePrice
+              ) {
+                // Loop through each level object
+                for (let i = 0; i < levels.length; i++) {
+                  const level = levels[i];
+                  console.log("level.price_multiplier", level.price_multiplier);
+
+                  // For level 1, use the initial values
+                  if (level.level === 1) {
+                    level.upgrade_price =
+                      initialUpgradePrice * level.price_multiplier;
+                    level.profit_per_hour_increase =
+                      initialProfit * level.profit_per_hour_multiplier;
+                  } else {
+                    // For subsequent levels, use the previous level's upgrade_price and profit_per_hour_increase
+                    const previousLevel = levels[i - 1];
+                    console.log("previousLevel", previousLevel);
+                    level.upgrade_price =
+                      previousLevel.upgrade_price +
+                      previousLevel.upgrade_price *
+                        previousLevel.price_multiplier;
+                    level.profit_per_hour_increase =
+                      previousLevel.profit_per_hour_increase +
+                      previousLevel.profit_per_hour_increase *
+                        previousLevel.profit_per_hour_multiplier;
+                  }
+                }
+
+                return levels;
+              }
+
+              const updatedLevels = calculateValues(
+                levelsValue,
+                initialProfitPerHour,
+                initialNominal
+              );
+              console.log("updatedLevels", updatedLevels);
+              setValue("levels", updatedLevels);
+              // const modifiedLevelsValue =
+            }}
+          >
+            Preview Card Prices
+          </button>
           <div className="w-full">
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="flex items-center gap-4 border rounded-sm px-2 py-4"
+                className="flex items-center gap-1 border rounded-sm px-1 py-2"
               >
                 <label
                   htmlFor={`Level-${index}`}
-                  className={`mt-8 block capitalize flex-0 mr-6 md:w-[100px] w-[60px] break-words font-semibold text-slate-800 `}
+                  className={`mt-8 block capitalize flex-0 mr-1 md:w-[100px] w-[60px] break-words font-semibold text-slate-800 `}
                 >
-                  Level {index}
+                  Level {field.level}
                 </label>
                 <Textinput
-                  name={`levels.${index}.upgraded_price`}
-                  label="Upgraded Price"
-                  placeholder="Upgraded Price"
+                  name={`levels.${index}.price_multiplier`}
+                  label="Price Multiplier"
+                  classLabel="text-xs font-semibold"
+                  placeholder="Price Multiplier"
                   register={register}
-                  defaultValue={field.upgraded_price}
+                  defaultValue={field.price_multiplier}
+                  type={"number"}
                 />
                 <Textinput
-                  name={`levels.${index}.profit_per_hour`}
+                  name={`levels.${index}.upgrade_price`}
+                  label="Upgrade Price"
+                  classLabel="text-xs font-semibold"
+                  placeholder="Upgrade Price"
+                  register={register}
+                  defaultValue={field.upgrade_price}
+                  type={"number"}
+                  readonly
+                />
+                <Textinput
+                  name={`levels.${index}.profit_per_hour_multiplier`}
+                  label="Profit/Hour Multiplier"
+                  classLabel="text-xs font-semibold"
+                  placeholder="Profit/Hour Multipliery"
+                  register={register}
+                  defaultValue={field.profit_per_hour_multiplier}
+                  type={"number"}
+                />
+                <Textinput
+                  name={`levels.${index}.profit_per_hour_increase`}
                   label="Profit per Hour"
+                  classLabel="text-xs font-semibold"
                   placeholder="Profit per Hour"
                   register={register}
                   defaultValue={field.profit_per_hour}
+                  type={"number"}
+                  readonly
                 />
                 <button
-                  className="mt-6 border rounded-lg p-2 border-red-600"
+                  className="mt-4 border rounded-lg p-2 border-red-600"
                   type="button"
                   onClick={() => swap(index, index + 1)}
                 >
@@ -286,7 +399,7 @@ const AddCard = () => {
                   />
                 </button>
                 <button
-                  className="mt-6 border rounded-lg p-2 border-green-600"
+                  className="mt-4 border rounded-lg p-2 border-green-600"
                   type="button"
                   onClick={() => swap(index, index - 1)}
                 >
@@ -318,9 +431,15 @@ const AddCard = () => {
           <div className="ltr:text-right rtl:text-left">
             <Button
               type="submit"
-              text="Add Card"
-              className="btn btn-dark block w-full text-center "
+              text="Submit Card"
+              className="btn bg-green-600 text-white block w-full text-center "
               isLoading={isLoading}
+              disabled={
+                !watch("nominal") ||
+                watch("nominal") === "" ||
+                !watch("profitperhour") ||
+                watch("profitperhour") === ""
+              }
             />
           </div>
         </form>
