@@ -61,7 +61,7 @@ const AddCard = () => {
   const FormValidationSchema = yup
     .object({
       name: yup.string().required("Category name is required"),
-      icon_url: yup.string().required("Category image is required"),
+      image: yup.string().required("Category image is required"),
     })
     .required();
 
@@ -149,10 +149,12 @@ const AddCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, icon_url, levels, condition, conditionLevel } = data;
+      const { name, description, image, levels, condition, conditionLevel } =
+        data;
       const card = {
         name,
-        icon_url,
+        description,
+        image,
         category_id: parseInt(id),
         levels: levels.map((l) => ({
           ...l,
@@ -201,7 +203,7 @@ const AddCard = () => {
         throw new Error("Failed to upload image");
       }
 
-      setValue("icon_url", response.data.data, { shouldValidate: true });
+      setValue("image", response.data.data, { shouldValidate: true });
       setStatus("success");
     } catch (error) {
       console.error(error);
@@ -228,6 +230,13 @@ const AddCard = () => {
             register={register}
             error={errors.name}
           />
+          <Textinput
+            name="description"
+            label="Card Description"
+            placeholder="Card Description"
+            register={register}
+            error={errors.description}
+          />
           <label
             htmlFor={"card-icon"}
             className={`block capitalize flex-0 mr-6 md:w-[100px] w-[60px] break-words `}
@@ -236,9 +245,9 @@ const AddCard = () => {
           </label>
           <input type="file" onChange={handleFileUpload} />
           <Result status={status} />
-          {errors?.icon_url && (
+          {errors?.image && (
             <div className={` mt-2 text-danger-500 block text-sm `}>
-              {errors?.icon_url?.message}
+              {errors?.image?.message}
             </div>
           )}
           <Select

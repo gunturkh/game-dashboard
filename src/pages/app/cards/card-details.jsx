@@ -37,7 +37,7 @@ const CardDetailsPage = () => {
                 <div className="flex space-x-4 items-center rtl:space-x-reverse">
                   <div className="flex-none">
                     <img
-                      src={getCardById?.icon_url}
+                      src={getCardById?.image}
                       alt={getCardById?.name}
                       className="object-cover w-full h-full rounded-full"
                     />

@@ -4,6 +4,12 @@ export function calculateValues(levels, initialProfit, initialUpgradePrice) {
     const level = levels[i];
     console.log("level.price_multiplier", level.price_multiplier);
 
+    // // For level 0, use the initial values
+    // if (level.level === 0) {
+    //   level.upgrade_price = parseFloat(initialUpgradePrice);
+    //   level.profit_per_hour = parseFloat(initialProfit);
+    //   level.profit_per_hour_increase = parseFloat(initialProfit);
+    // }
     // For level 1, use the initial values
     if (level.level === 1) {
       level.upgrade_price = initialUpgradePrice * level.price_multiplier;

@@ -48,7 +48,7 @@ const CardsTable = ({ cardsData }) => {
           <span className="flex items-center min-w-[150px]">
             <span className="w-8 h-8 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
               <img
-                src={row?.data[row?.cell?.row?.index]?.icon_url}
+                src={row?.data[row?.cell?.row?.index]?.image}
                 alt={row?.cell?.value}
                 className="object-cover w-full h-full rounded-full"
               />

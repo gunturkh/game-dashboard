@@ -69,7 +69,7 @@ const EditCard = () => {
   const FormValidationSchema = yup
     .object({
       name: yup.string().required("Category name is required"),
-      icon_url: yup.string().required("Category image is required"),
+      image: yup.string().required("Category image is required"),
     })
     .required();
 
@@ -98,7 +98,7 @@ const EditCard = () => {
     if (getCardById) {
       setValue("name", getCardById.name);
       setValue("levels", getCardById.levels);
-      setValue("icon_url", getCardById.icon_url);
+      setValue("image", getCardById.image);
       setValue("is_active", getCardById.is_active);
       setValue("requirements", getCardById.requirements);
       setValue("initialCondition", getCardById.condition);
@@ -106,13 +106,15 @@ const EditCard = () => {
       setValue("conditionLevel", getCardById.condition?.level);
       setValue(
         "nominal",
-        getCardById.levels[0].upgrade_price *
-          (1 / getCardById.levels[0].price_multiplier)
+        getCardById.levels[0].upgrade_price
+        // getCardById.levels[0].upgrade_price *
+        //   (1 / getCardById.levels[0].price_multiplier)
       );
       setValue(
         "profitperhour",
-        getCardById.levels[0].profit_per_hour *
-          (1 / getCardById.levels[0].profit_per_hour_multiplier)
+        getCardById.levels[0].profit_per_hour
+        // getCardById.levels[0].profit_per_hour *
+        //   (1 / getCardById.levels[0].profit_per_hour_multiplier)
       );
       setStatus("uploaded");
     }
@@ -169,11 +171,11 @@ const EditCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, icon_url, levels, condition, conditionLevel } = data;
+      const { name, image, levels, condition, conditionLevel } = data;
       const card = {
         id: getCardById.id,
         name,
-        icon_url,
+        image,
         category_id: parseInt(id),
         levels: levels.map((l) => ({
           ...l,
@@ -221,7 +223,7 @@ const EditCard = () => {
         throw new Error("Failed to upload image");
       }
 
-      setValue("icon_url", response.data.data, { shouldValidate: true });
+      setValue("image", response.data.data, { shouldValidate: true });
       setStatus("success");
     } catch (error) {
       console.error(error);
@@ -258,10 +260,10 @@ const EditCard = () => {
             >
               Image
             </label>
-            {status === "uploaded" && getValues().icon_url ? (
+            {status === "uploaded" && getValues().image ? (
               <div className="relative w-28 border border-neutral-200 rounded-md p-4">
                 <img
-                  src={getValues()?.icon_url}
+                  src={getValues()?.image}
                   alt={getValues()?.name}
                   className="object-cover w-16 h-16 rounded-full"
                 />
@@ -282,9 +284,9 @@ const EditCard = () => {
                 <Result status={status} />
               </>
             )}
-            {errors?.icon_url && (
+            {errors?.image && (
               <div className={` mt-2 text-danger-500 block text-sm `}>
-                {errors?.icon_url?.message}
+                {errors?.image?.message}
               </div>
             )}
             <Select
@@ -361,7 +363,7 @@ const EditCard = () => {
                     htmlFor={`Level-${index}`}
                     className={`mt-8 block capitalize flex-0 mr-6 md:w-[100px] w-[60px] break-words font-semibold text-slate-800 `}
                   >
-                    Level {field.level}
+                    Level {index}
                   </label>
                   <Textinput
                     name={`levels.${index}.price_multiplier`}
