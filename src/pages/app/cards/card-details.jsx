@@ -71,6 +71,9 @@ const CardDetailsPage = () => {
                 <div className="text-slate-600 dark:text-slate-400 text-sm">
                   Requirements: {`${!getCardById?.condition ? "Empty" : ""}`}
                 </div>
+                <div className="text-slate-600 dark:text-slate-400 text-sm">
+                  Description: {getCardById?.description}
+                </div>
                 {getCardById?.condition && (
                   <>
                     <div className="text-slate-600 dark:text-slate-400 text-sm">
