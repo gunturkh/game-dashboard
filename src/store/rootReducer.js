@@ -8,6 +8,7 @@ import level from "../pages/app/levels/store";
 import kanban from "../pages/app/kanban/store";
 import auth from "./api/auth/authSlice";
 import cart from "./api/shop/cartSlice";
+import player from "../pages/app/players/store"
 
 const rootReducer = {
   layout,
@@ -19,6 +20,7 @@ const rootReducer = {
   kanban,
   auth,
   cart,
-  level
+  level,
+  player
 };
 export default rootReducer;

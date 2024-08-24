@@ -14,14 +14,48 @@ import {
 } from "react-table";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setEditPlayerItem } from "@/pages/app/players/store";
 
 const PlayersTable = ({ playersData }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const COLUMNS = [
     {
       Header: "User Name",
       accessor: "username",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px] cursor-pointer">
+            <div
+              onClick={() => {
+                dispatch(setEditPlayerItem(row?.row?.original));
+              }}
+              className="font-bold text-sm text-blue-800 dark:text-blue-300 capitalize"
+            >
+              {row?.cell?.value}
+            </div>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Points Balance",
+      accessor: "points_balance",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Points Total",
+      accessor: "points_total",
       Cell: (row) => {
         return (
           <span className="flex items-center min-w-[150px]">
@@ -101,32 +135,6 @@ const PlayersTable = ({ playersData }) => {
     {
       Header: "Level",
       accessor: "level",
-      Cell: (row) => {
-        return (
-          <span className="flex items-center min-w-[150px]">
-            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {row?.cell?.value}
-            </span>
-          </span>
-        );
-      },
-    },
-    {
-      Header: "Points Balance",
-      accessor: "points_balance",
-      Cell: (row) => {
-        return (
-          <span className="flex items-center min-w-[150px]">
-            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {row?.cell?.value}
-            </span>
-          </span>
-        );
-      },
-    },
-    {
-      Header: "Points Total",
-      accessor: "points_total",
       Cell: (row) => {
         return (
           <span className="flex items-center min-w-[150px]">

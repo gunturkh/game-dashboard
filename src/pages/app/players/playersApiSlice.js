@@ -8,7 +8,16 @@ export const playersApi = apiSlice.injectEndpoints({
             transformResponse: (response) => response.data,
             providesTags: ["players"],
         }),
+        putPlayer: builder.mutation({
+            query: (data) => ({
+                url: `/admin/players/${data.id}`,
+                method: "PUT",
+                body: { points_balance: parseInt(data.points_balance) }
+            }),
+            transformResponse: (response) => response.data,
+            invalidatesTags: ['players']
+        })
     }),
 });
-export const { useGetPlayersQuery } = playersApi;
+export const { useGetPlayersQuery, usePutPlayerMutation } = playersApi;
 

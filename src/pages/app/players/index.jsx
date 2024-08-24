@@ -3,6 +3,7 @@ import { useGetPlayersQuery } from "./playersApiSlice";
 import LoaderCircle from "@/components/Loader-circle";
 import Card from "@/components/ui/Card";
 import PlayersTable from "@/components/partials/Table/players-table";
+import EditPlayer from "./EditPlayer";
 
 function Players() {
   const {
@@ -25,9 +26,10 @@ function Players() {
       {getPlayers && (
         <Card title={"Players"} noborder>
           {/* <LevelDetailTable levelsData={getLevels} /> */}
-          <PlayersTable playersData={getPlayers}/>
+          <PlayersTable playersData={getPlayers} />
         </Card>
       )}
+      <EditPlayer />
     </div>
   );
 }
