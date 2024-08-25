@@ -67,9 +67,9 @@ const AddCard = () => {
     .required();
 
   const defaultLevelValue = [];
-  for (let index = 0; index <= 24; index++) {
+  for (let index = 0; index <= 25; index++) {
     defaultLevelValue.push({
-      level: index + 1,
+      level: index,
       upgrade_price: 0,
       profit_per_hour_increase: 0,
       profit_per_hour: 0,
@@ -89,6 +89,7 @@ const AddCard = () => {
     watch,
   } = useForm({
     defaultValues: {
+      available_duration: 0,
       levels: defaultLevelValue,
     },
     resolver: yupResolver(FormValidationSchema),
@@ -153,7 +154,7 @@ const AddCard = () => {
       const {
         name,
         is_published,
-        available_days,
+        available_duration,
         description,
         image,
         levels,
@@ -163,7 +164,7 @@ const AddCard = () => {
       const card = {
         name,
         is_published,
-        available_days,
+        available_duration: parseInt(available_duration),
         description,
         image,
         category_id: parseInt(id),
@@ -295,11 +296,11 @@ const AddCard = () => {
             )
           )}
           <Textinput
-            name="available_days"
-            label="Available For (days)"
-            placeholder="Available For (days)"
+            name="available_duration"
+            label="Available For (hours)"
+            placeholder="Available For (hours)"
             register={register}
-            error={errors.available_days}
+            error={errors.available_duration}
             type={"number"}
           />
           <Textinput
@@ -385,12 +386,12 @@ const AddCard = () => {
                   type={"number"}
                 />
                 <Textinput
-                  name={`levels.${index}.profit_per_hour`}
+                  name={`levels.${index}.profit_per_hour_increase`}
                   label="Profit per Hour"
                   classLabel="text-xs font-semibold"
                   placeholder="Profit per Hour"
                   register={register}
-                  defaultValue={field.profit_per_hour}
+                  defaultValue={field.profit_per_hour_increase}
                   type={"number"}
                   readonly
                 />

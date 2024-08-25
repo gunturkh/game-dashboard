@@ -101,7 +101,7 @@ const EditCard = () => {
       setValue("description", getCardById.description);
       setValue("levels", getCardById.levels);
       setValue("is_published", getCardById.is_published);
-      setValue("available_days", getCardById.available_days);
+      setValue("available_duration", getCardById.available_duration);
       setValue("image", getCardById.image);
       setValue("is_active", getCardById.is_active);
       setValue("requirements", getCardById.requirements);
@@ -175,13 +175,13 @@ const EditCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, is_published, available_days, description, image, levels, condition, conditionLevel } =
+      const { name, is_published, available_duration, description, image, levels, condition, conditionLevel } =
         data;
       const card = {
         id: getCardById.id,
         name,
         is_published,
-        available_days,
+        available_duration: parseInt(available_duration),
         description,
         image,
         category_id: parseInt(id),
@@ -338,11 +338,11 @@ const EditCard = () => {
               )
             )}
             <Textinput
-              name="available_days"
-              label="Available For (days)"
-              placeholder="Available For (days)"
+              name="available_duration"
+              label="Available For (hours)"
+              placeholder="Available For (hours)"
               register={register}
-              error={errors.available_days}
+              error={errors.available_duration}
               type={"number"}
             />
             <Textinput
@@ -428,12 +428,12 @@ const EditCard = () => {
                     type={"number"}
                   />
                   <Textinput
-                    name={`levels.${index}.profit_per_hour`}
+                    name={`levels.${index}.profit_per_hour_increase`}
                     label="Profit per Hour"
                     classLabel="text-xs font-semibold"
                     placeholder="Profit per Hour"
                     register={register}
-                    defaultValue={field.profit_per_hour}
+                    defaultValue={field.profit_per_hour_increase}
                     type={"number"}
                     readonly
                   />

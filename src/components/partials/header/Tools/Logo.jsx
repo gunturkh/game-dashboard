@@ -7,6 +7,8 @@ import MainLogo from "@/assets/images/logo/logo.svg";
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
 import MobileLogo from "@/assets/images/logo/logo-c.svg";
 import MobileLogoWhite from "@/assets/images/logo/logo-c-white.svg";
+import Chipmunk from "@/assets/images/logo/chipmunk.png";
+
 const Logo = () => {
   const [isDark] = useDarkMode();
   const { width, breakpoints } = useWidth();
@@ -15,9 +17,9 @@ const Logo = () => {
     <div>
       <Link to="/dashboard">
         {width >= breakpoints.xl ? (
-          <img src={isDark ? LogoWhite : MainLogo} alt="" />
+          <img className="w-20" src={isDark ? Chipmunk : Chipmunk} alt="" />
         ) : (
-          <img src={isDark ? MobileLogoWhite : MobileLogo} alt="" />
+          <img className="w-20" src={isDark ? Chipmunk : Chipmunk} alt="" />
         )}
       </Link>
     </div>

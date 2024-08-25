@@ -104,6 +104,12 @@ export const menuItems = [
     isHide: true,
   },
   {
+    title: "Tasks",
+    icon: "heroicons-outline:view-boards",
+    link: "tasks",
+    isHide: true,
+  },
+  {
     title: "Referrals",
     icon: "heroicons-outline:user",
     link: "referrals",

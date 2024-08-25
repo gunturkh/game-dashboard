@@ -39,7 +39,7 @@ const CardDetailsPage = () => {
                     <img
                       src={getCardById?.image}
                       alt={getCardById?.name}
-                      className="object-cover w-full h-full rounded-full"
+                      className="object-cover w-20 h-20 rounded-full"
                     />
                   </div>
                   <div className="font-medium text-base leading-6">
@@ -69,7 +69,7 @@ const CardDetailsPage = () => {
 
               <div className="flex flex-col gap-1 py-4">
                 <div className="text-slate-600 dark:text-slate-400 text-sm">
-                  Available for (days): {getCardById?.available_days}
+                  Available for (hours): {getCardById?.available_duration}
                 </div>
                 <div className="text-slate-600 dark:text-slate-400 text-sm">
                   Status:{" "}

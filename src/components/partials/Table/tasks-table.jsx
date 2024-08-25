@@ -14,9 +14,12 @@ import {
 } from "react-table";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setEditCardItem } from "@/pages/app/cards/store";
 
-const CardDetailTable = ({ cardData }) => {
+const TasksTable = ({ tasksData }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const actions = [
     {
@@ -27,20 +30,29 @@ const CardDetailTable = ({ cardData }) => {
     {
       name: "edit",
       icon: "heroicons:pencil-square",
+      doit: (item) => dispatch(setEditCardItem(item)),
     },
-    {
-      name: "delete",
-      icon: "heroicons-outline:trash",
-    },
+    // {
+    //   name: "delete",
+    //   icon: "heroicons-outline:trash",
+    // },
   ];
 
   const COLUMNS = [
     {
-      Header: "level",
-      accessor: "level",
+      Header: "name",
+      accessor: "name",
       Cell: (row) => {
+        console.log("row", row);
         return (
           <span className="flex items-center min-w-[150px]">
+            <span className="w-8 h-8 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
+              <img
+                src={row?.data[row?.cell?.row?.index]?.image}
+                alt={row?.cell?.value}
+                className="object-cover w-full h-full rounded-full"
+              />
+            </span>
             <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
               {row?.cell?.value}
             </span>
@@ -48,43 +60,118 @@ const CardDetailTable = ({ cardData }) => {
         );
       },
     },
+
     {
-      Header: "upgrade price",
-      accessor: "upgrade_price",
+      Header: "status",
+      accessor: "is_published",
       Cell: (row) => {
         return (
-          <span className="flex items-center min-w-[150px]">
-            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {row?.cell?.value}
+          <span className="block min-w-[140px] text-left">
+            <span className="inline-block text-center mx-auto py-1">
+              {row?.cell?.value === false && (
+                <span className="flex items-center space-x-3 rtl:space-x-reverse">
+                  <span className="h-[6px] w-[6px] bg-danger-500 rounded-full inline-block ring-4 ring-opacity-30 ring-danger-500"></span>
+                  <span>Not Published</span>
+                </span>
+              )}
+              {row?.cell?.value === true && (
+                <span className="flex items-center space-x-3 rtl:space-x-reverse">
+                  <span className="h-[6px] w-[6px] bg-success-500 rounded-full inline-block ring-4 ring-opacity-30 ring-success-500"></span>
+
+                  <span>Published</span>
+                </span>
+              )}
             </span>
           </span>
         );
       },
     },
     {
-      Header: "profit per hour",
-      accessor: "profit_per_hour_increase",
+      Header: "Created At",
+      accessor: "created_at_unix",
       Cell: (row) => {
         return (
-          <span className="flex items-center min-w-[150px]">
-            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {row?.cell?.value}
-            </span>
+          <span>
+            {dayjs.unix(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}
           </span>
+        );
+      },
+    },
+    {
+      Header: "Updated At",
+      accessor: "updated_at_unix",
+      Cell: (row) => {
+        return (
+          <span>
+            {dayjs.unix(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Type",
+      accessor: "type",
+      Cell: (row) => {
+        return <span>{row?.cell?.value}</span>;
+      },
+    },
+    {
+      Header: "Rewards",
+      accessor: "reward_coins",
+      Cell: (row) => {
+        return <span>{row?.cell?.value}</span>;
+      },
+    },
+    {
+      Header: "Periodicity",
+      accessor: "periodicity",
+      Cell: (row) => {
+        return <span>{row?.cell?.value}</span>;
+      },
+    },
+    {
+      Header: "action",
+      accessor: "action",
+      Cell: (row) => {
+        return (
+          <div className=" text-center">
+            <div className="grid grid-cols-[100px_100px_100px] gap-2 divide-x divide-slate-100 dark:divide-slate-800">
+              {actions.map((item, i) => (
+                <div key={i} onClick={() => item.doit(row?.row?.original)}>
+                  <div
+                    className={`
+                
+                  ${
+                    item.name === "delete"
+                      ? "bg-danger-500 text-danger-500 bg-opacity-30   hover:bg-opacity-100 hover:text-white"
+                      : "hover:bg-slate-900 hover:text-white dark:hover:bg-slate-600 dark:hover:bg-opacity-50"
+                  }
+                   w-full border border-gray-500 border-opacity-10 px-4 py-2 text-sm  last:mb-0 cursor-pointer 
+                   first:rounded-t last:rounded-b flex  space-x-2 items-center rtl:space-x-reverse `}
+                  >
+                    <span className="text-base">
+                      <Icon icon={item.icon} />
+                    </span>
+                    <span>{item.name}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         );
       },
     },
   ];
 
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => cardData, []);
+  const data = useMemo(() => tasksData, []);
 
   const tableInstance = useTable(
     {
       columns,
       data,
       initialState: {
-        pageSize: data.length,
+        pageSize: data?.length,
       },
     },
 
@@ -114,9 +201,11 @@ const CardDetailTable = ({ cardData }) => {
 
   const { pageIndex, pageSize } = state;
 
+  if (tasksData.length === 0) return <p>Empty Task</p>;
+
   return (
     <>
-      <div className="p-2">
+      <div>
         <div className="overflow-x-auto -mx-6">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden ">
@@ -179,4 +268,4 @@ const CardDetailTable = ({ cardData }) => {
   );
 };
 
-export default CardDetailTable;
+export default TasksTable;
