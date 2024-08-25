@@ -174,11 +174,12 @@ const EditCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, description, image, levels, condition, conditionLevel } =
+      const { name, is_published, description, image, levels, condition, conditionLevel } =
         data;
       const card = {
         id: getCardById.id,
         name,
+        is_published,
         description,
         image,
         category_id: parseInt(id),

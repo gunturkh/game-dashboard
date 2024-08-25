@@ -19,7 +19,7 @@ import { setEditCardItem } from "@/pages/app/cards/store";
 
 const CardsTable = ({ cardsData }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const actions = [
     {
@@ -30,7 +30,7 @@ const CardsTable = ({ cardsData }) => {
     {
       name: "edit",
       icon: "heroicons:pencil-square",
-      doit: (item)=> dispatch(setEditCardItem(item))
+      doit: (item) => dispatch(setEditCardItem(item)),
     },
     // {
     //   name: "delete",
@@ -63,7 +63,7 @@ const CardsTable = ({ cardsData }) => {
 
     {
       Header: "status",
-      accessor: "is_active",
+      accessor: "is_published",
       Cell: (row) => {
         return (
           <span className="block min-w-[140px] text-left">
@@ -71,14 +71,14 @@ const CardsTable = ({ cardsData }) => {
               {row?.cell?.value === false && (
                 <span className="flex items-center space-x-3 rtl:space-x-reverse">
                   <span className="h-[6px] w-[6px] bg-danger-500 rounded-full inline-block ring-4 ring-opacity-30 ring-danger-500"></span>
-                  <span>Inactive</span>
+                  <span>Not Published</span>
                 </span>
               )}
               {row?.cell?.value === true && (
                 <span className="flex items-center space-x-3 rtl:space-x-reverse">
                   <span className="h-[6px] w-[6px] bg-success-500 rounded-full inline-block ring-4 ring-opacity-30 ring-success-500"></span>
 
-                  <span>Active</span>
+                  <span>Published</span>
                 </span>
               )}
             </span>
@@ -91,7 +91,9 @@ const CardsTable = ({ cardsData }) => {
       accessor: "updated_at_unix",
       Cell: (row) => {
         return (
-          <span>{dayjs.unix(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}</span>
+          <span>
+            {dayjs.unix(row?.cell?.value).format("DD/MM/YYYY HH:mm:ss")}
+          </span>
         );
       },
     },
