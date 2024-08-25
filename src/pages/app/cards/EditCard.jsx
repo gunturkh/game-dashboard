@@ -101,6 +101,7 @@ const EditCard = () => {
       setValue("description", getCardById.description);
       setValue("levels", getCardById.levels);
       setValue("is_published", getCardById.is_published);
+      setValue("available_days", getCardById.available_days);
       setValue("image", getCardById.image);
       setValue("is_active", getCardById.is_active);
       setValue("requirements", getCardById.requirements);
@@ -174,12 +175,13 @@ const EditCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, is_published, description, image, levels, condition, conditionLevel } =
+      const { name, is_published, available_days, description, image, levels, condition, conditionLevel } =
         data;
       const card = {
         id: getCardById.id,
         name,
         is_published,
+        available_days,
         description,
         image,
         category_id: parseInt(id),
@@ -335,6 +337,14 @@ const EditCard = () => {
                 />
               )
             )}
+            <Textinput
+              name="available_days"
+              label="Available For (days)"
+              placeholder="Available For (days)"
+              register={register}
+              error={errors.available_days}
+              type={"number"}
+            />
             <Textinput
               name="nominal"
               label="Initial Nominal"

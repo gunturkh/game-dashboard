@@ -153,6 +153,7 @@ const AddCard = () => {
       const {
         name,
         is_published,
+        available_days,
         description,
         image,
         levels,
@@ -162,6 +163,7 @@ const AddCard = () => {
       const card = {
         name,
         is_published,
+        available_days,
         description,
         image,
         category_id: parseInt(id),
@@ -292,6 +294,14 @@ const AddCard = () => {
               />
             )
           )}
+          <Textinput
+            name="available_days"
+            label="Available For (days)"
+            placeholder="Available For (days)"
+            register={register}
+            error={errors.available_days}
+            type={"number"}
+          />
           <Textinput
             name="nominal"
             label="Initial Nominal"

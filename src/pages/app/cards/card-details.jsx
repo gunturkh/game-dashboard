@@ -69,6 +69,15 @@ const CardDetailsPage = () => {
 
               <div className="flex flex-col gap-1 py-4">
                 <div className="text-slate-600 dark:text-slate-400 text-sm">
+                  Available for (days): {getCardById?.available_days}
+                </div>
+                <div className="text-slate-600 dark:text-slate-400 text-sm">
+                  Status:{" "}
+                  {`${
+                    getCardById?.is_published ? "Published" : "Not Published"
+                  }`}
+                </div>
+                <div className="text-slate-600 dark:text-slate-400 text-sm">
                   Requirements: {`${!getCardById?.condition ? "Empty" : ""}`}
                 </div>
                 <div className="text-slate-600 dark:text-slate-400 text-sm">
