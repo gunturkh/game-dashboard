@@ -15,18 +15,18 @@ import {
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setEditCardItem } from "@/pages/app/cards/store";
+import { setEditCardItem } from "@/pages/app/tasks/store";
 
 const TasksTable = ({ tasksData }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const actions = [
-    {
-      name: "view",
-      icon: "heroicons-outline:eye",
-      doit: (item) => navigate(`/card/${item.id}`),
-    },
+    // {
+    //   name: "view",
+    //   icon: "heroicons-outline:eye",
+    //   doit: (item) => navigate(`/card/${item.id}`),
+    // },
     {
       name: "edit",
       icon: "heroicons:pencil-square",

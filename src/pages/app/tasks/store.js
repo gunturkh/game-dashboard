@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const appLevelSlice = createSlice({
-  name: "applevel",
+export const appTaskSlice = createSlice({
+  name: "apptask",
   initialState: {
     openCardModal: false,
     isLoading: null,
     editCardModal: false,
+    editCardItem: {},
   },
   reducers: {
     toggleAddCardModal: (state, action) => {
@@ -14,11 +15,16 @@ export const appLevelSlice = createSlice({
     toggleEditCardModal: (state, action) => {
       state.editCardModal = action.payload;
     },
+    setEditCardItem: (state, action) => {
+      state.editCardModal = !state.editCardModal
+      state.editCardItem = action.payload
+    },
   },
 });
 
 export const {
   toggleAddCardModal,
   toggleEditCardModal,
-} = appLevelSlice.actions;
-export default appLevelSlice.reducer;
+  setEditCardItem
+} = appTaskSlice.actions;
+export default appTaskSlice.reducer;

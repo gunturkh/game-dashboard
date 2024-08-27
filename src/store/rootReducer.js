@@ -9,6 +9,7 @@ import kanban from "../pages/app/kanban/store";
 import auth from "./api/auth/authSlice";
 import cart from "./api/shop/cartSlice";
 import player from "../pages/app/players/store"
+import task from "../pages/app/tasks/store"
 
 const rootReducer = {
   layout,
@@ -21,6 +22,7 @@ const rootReducer = {
   auth,
   cart,
   level,
-  player
+  player,
+  task
 };
 export default rootReducer;

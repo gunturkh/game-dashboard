@@ -175,6 +175,7 @@ function App() {
           <Route path="players" element={<PlayersPostPage />} />
           <Route path="referrals" element={<ReferralsPostPage />} />
           <Route path="tasks" element={<TasksPostPage />} />
+          <Route path={"tasks/:id"} element={<TasksPostPage />} />
           <Route path="kanban" element={<KanbanPage />} />
           <Route path="calender" element={<CalenderPage />} />
           {/* Components pages */}

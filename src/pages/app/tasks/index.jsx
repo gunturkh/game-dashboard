@@ -9,10 +9,10 @@ import AddCategory from "../cards/AddCategory";
 import { useDispatch } from "react-redux";
 import { toggleAddModal } from "../projects/store";
 import AddTask from "./AddTask";
-import LevelDetailTable from "@/components/partials/Table/level-detail-table";
 import Card from "@/components/ui/Card";
 import { toggleAddCardModal } from "./store";
 import TasksTable from "@/components/partials/Table/tasks-table";
+import EditTask from "./EditTask";
 
 function Tasks() {
   const navigate = useNavigate();
@@ -61,11 +61,12 @@ function Tasks() {
         />
       </div>
       {getTasks && (
-        <Card title={"Level"} noborder>
+        <Card title={"Tasks"} noborder>
           <TasksTable tasksData={getTasks} />
         </Card>
       )}
       <AddTask />
+      <EditTask />
     </div>
   );
 }

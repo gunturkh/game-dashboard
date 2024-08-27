@@ -11,26 +11,37 @@ import * as yup from "yup";
 import { Result } from "../Result";
 import { useCreateCardCategoriesMutation } from "../cards/cardApiSlice";
 import { useUploadMutation } from "@/store/api/image/imageApiSlice";
-import { toggleAddCardModal } from "./store";
+import { toggleEditCardModal } from "./store";
 import Icons from "@/components/ui/Icon";
-import { useCreateTasksMutation, useGetTasksQuery } from "./taskApiSlice";
+import {
+  useCreateTasksMutation,
+  useGetTaskByIdQuery,
+  useGetTasksQuery,
+  usePutTaskMutation,
+} from "./taskApiSlice";
 import LoaderCircle from "@/components/Loader-circle";
 import Switch from "@/components/ui/Switch";
 import Select from "@/components/ui/Select";
+import { useParams } from "react-router-dom";
 
-const AddTask = () => {
-  const { openCardModal } = useSelector((state) => state.task);
-  const { data: getTasks, isFetching } = useGetTasksQuery({
-    skipPollingIfUnfocused: true,
-    refetchOnMountOrArgChange: true,
-    skip: false,
-  });
+const EditTask = () => {
+  const { id } = useParams();
+  const { token } = useSelector((state) => state.auth);
+  const { editCardModal, editCardItem } = useSelector((state) => state.task);
+  const { data: getTaskById, isFetching } = useGetTaskByIdQuery(
+    editCardItem?.id,
+    {
+      skipPollingIfUnfocused: true,
+      refetchOnMountOrArgChange: true,
+      skip: false,
+    }
+  );
   const dispatch = useDispatch();
 
   const [status, setStatus] = useState("initial");
-  const [createTasks] = useCreateTasksMutation();
+  const [putTask] = usePutTaskMutation();
   const [upload, { isLoading }] = useUploadMutation();
-
+  console.log("getTaskById by id", getTaskById);
   const FormValidationSchema = yup
     .object({
       // level: yup.array().required("Levels is required"),
@@ -47,36 +58,11 @@ const AddTask = () => {
     getValues,
     watch,
   } = useForm({
-    defaultValues: {
-      id: "",
-      name: "",
-      reward_coins: 0,
-      type: "follow_social_media",
-      config: {
-        link: "",
-      },
-      periodicity: "Once",
-      image: "",
-      is_published: false,
-    },
+    defaultValues: getTaskById,
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
   });
   console.log("errors", errors);
-
-  useEffect(() => {
-    console.log("getTasks addLevel", getTasks);
-    if (getTasks) setValue("levels", getTasks);
-  }, [getTasks]);
-
-  const { fields, append, remove, swap } = useFieldArray({
-    control,
-    name: "levels",
-  });
-  useEffect(() => {
-    console.log("fields", fields);
-  }, [fields]);
-  console.log("watch(type)", watch("type"));
 
   const onSubmit = async (data) => {
     try {
@@ -90,7 +76,7 @@ const AddTask = () => {
         is_published,
         config,
       } = data;
-      const response = await createTasks({
+      const response = await putTask({
         name,
         image,
         type,
@@ -100,11 +86,9 @@ const AddTask = () => {
         config,
       });
       console.log("response create task", response.data);
-      if (response.data) {
-        toast.success("Add Task Successful");
-        dispatch(toggleAddCardModal(false));
-        reset();
-      }
+      toast.success("Add Task Successful");
+      dispatch(toggleEditCardModal(false));
+      reset();
     } catch (error) {
       toast.error(error.message);
     }
@@ -131,13 +115,26 @@ const AddTask = () => {
     }
   };
 
+  useEffect(() => {
+    if (getTaskById) {
+      setValue("name", getTaskById.name);
+      setValue("image", getTaskById.image);
+      // setValue("type", getTaskById.type);
+      setValue("reward_coins", getTaskById.reward_coins);
+      setValue("is_published", getTaskById.is_published);
+      setValue("periodicity", getTaskById.periodicity);
+      setStatus("uploaded");
+    }
+  }, [getTaskById]);
+
+  console.log("editCardModal", editCardModal);
   return (
     <div>
       <Modal
-        title="Add New Level"
+        title="Edit Task"
         labelclassName="btn-outline-dark"
-        activeModal={openCardModal}
-        onClose={() => dispatch(toggleAddCardModal(false))}
+        activeModal={editCardModal}
+        onClose={() => dispatch(toggleEditCardModal(false))}
       >
         {isFetching ? (
           <LoaderCircle />
@@ -169,18 +166,18 @@ const AddTask = () => {
               error={errors.reward_coins}
               type={"number"}
             />
-            <Select
+            {/* <Select
               name={"type"}
               label={"Type"}
               register={register}
-              placeholder="Task type"
-              defaultValue={'follow_social_media'}
+              placeholder="Level Condition to buy card"
+              defaultValue={1}
               options={[
                 { value: "follow_social_media", label: "Follow Social Media" },
                 { value: "watch_video", label: "Watch Video" },
               ]}
-            />
-            {watch("type") === "follow_social_media" && (
+            /> */}
+            {(watch("type") === "Default" || watch("type") === "WithLink") && (
               <Textinput
                 name="config.link"
                 label="Link"
@@ -203,8 +200,30 @@ const AddTask = () => {
             >
               Image
             </label>
-            <input type="file" onChange={handleFileUpload} />
-            <Result status={status} />
+            {status === "uploaded" && getValues().image ? (
+              <div className="relative w-28 border border-neutral-200 rounded-md p-4">
+                <img
+                  src={getValues()?.image}
+                  alt={getValues()?.name}
+                  className="object-cover w-16 h-16 rounded-full"
+                />
+                <button
+                  className="absolute top-1 right-1"
+                  type="button"
+                  onClick={() => setStatus("initial")}
+                >
+                  <Icons
+                    className="text-red-600"
+                    icon={"heroicons-outline:trash"}
+                  />
+                </button>
+              </div>
+            ) : (
+              <>
+                <input type="file" onChange={handleFileUpload} />
+                <Result status={status} />
+              </>
+            )}
             {errors?.image && (
               <div className={` mt-2 text-danger-500 block text-sm `}>
                 {errors?.image?.message}
@@ -225,4 +244,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default EditTask;

@@ -20,15 +20,15 @@ export function calculateValues(levels, initialProfit, initialUpgradePrice) {
       const previousLevel = levels[i - 1];
       console.log("previousLevel", previousLevel);
       level.upgrade_price =
-        previousLevel.upgrade_price +
-        previousLevel.upgrade_price * previousLevel.price_multiplier;
+        parseFloat(previousLevel.upgrade_price) +
+        parseFloat(previousLevel.upgrade_price) * parseFloat(previousLevel.price_multiplier);
 
       level.profit_per_hour =
-        previousLevel.profit_per_hour +
-        previousLevel.profit_per_hour * level.profit_per_hour_multiplier;
+        parseFloat(previousLevel.profit_per_hour) +
+        parseFloat(previousLevel.profit_per_hour) * parseFloat(level.profit_per_hour_multiplier);
 
       level.profit_per_hour_increase =
-        previousLevel.profit_per_hour * level.profit_per_hour_multiplier;
+        parseFloat(previousLevel.profit_per_hour) * parseFloat(level.profit_per_hour_multiplier);
     }
   }
 
