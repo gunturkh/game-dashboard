@@ -386,12 +386,12 @@ const AddCard = () => {
                   type={"number"}
                 />
                 <Textinput
-                  name={`levels.${index}.profit_per_hour_increase`}
+                  name={`levels.${index}.profit_per_hour`}
                   label="Profit per Hour"
                   classLabel="text-xs font-semibold"
                   placeholder="Profit per Hour"
                   register={register}
-                  defaultValue={field.profit_per_hour_increase}
+                  defaultValue={field.profit_per_hour}
                   type={"number"}
                   readonly
                 />
