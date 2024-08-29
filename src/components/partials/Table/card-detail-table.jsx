@@ -64,7 +64,7 @@ const CardDetailTable = ({ cardData }) => {
     },
     {
       Header: "profit per hour",
-      accessor: "profit_per_hour_increase",
+      accessor: "profit_per_hour",
       Cell: (row) => {
         return (
           <span className="flex items-center min-w-[150px]">
