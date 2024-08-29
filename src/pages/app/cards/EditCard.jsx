@@ -23,7 +23,7 @@ import { useEffect } from "react";
 import LoaderCircle from "@/components/Loader-circle";
 import Select from "@/components/ui/Select";
 import { API_URL } from "@/store/api/apiSlice";
-import { calculateValues } from "./utils";
+import { calculateValues, formatAndRoundNumber } from "./utils";
 import Switch from "@/components/ui/Switch";
 
 const EditCard = () => {
@@ -175,8 +175,16 @@ const EditCard = () => {
   const onSubmit = async (data) => {
     try {
       console.log("data", data);
-      const { name, is_published, available_duration, description, image, levels, condition, conditionLevel } =
-        data;
+      const {
+        name,
+        is_published,
+        available_duration,
+        description,
+        image,
+        levels,
+        condition,
+        conditionLevel,
+      } = data;
       const card = {
         id: getCardById.id,
         name,
@@ -187,8 +195,13 @@ const EditCard = () => {
         category_id: parseInt(id),
         levels: levels.map((l) => ({
           ...l,
-          price_multiplier: parseFloat(l.price_multiplier),
-          profit_per_hour_multiplier: parseFloat(l.profit_per_hour_multiplier),
+          price_multiplier: l?.price_multiplier
+            ? parseFloat(l.price_multiplier)
+            : 0.5,
+          profit_per_hour_multiplier: l?.profit_per_hour_multiplier
+            ? parseFloat(l.profit_per_hour_multiplier)
+            : 0.1,
+          respawn_time: l?.respawn_time ? l?.respawn_time : 0,
         })),
         ...(condition &&
           condition !== "null" &&
@@ -409,13 +422,13 @@ const EditCard = () => {
                     type={"number"}
                   />
                   <Textinput
-                    name={`levels.${index}.upgrade_price`}
-                    label="Upgraded Price"
+                    // name={`levels.${index}.upgrade_price`}
+                    label="Upgrade Price"
                     classLabel="text-xs font-semibold"
                     placeholder="Upgrade Price"
-                    register={register}
-                    defaultValue={field.upgrade_price}
-                    type={"number"}
+                    defaultValue={formatAndRoundNumber(
+                      watch(`levels.${index}.upgrade_price`)
+                    )}
                     readonly
                   />
                   <Textinput
@@ -428,13 +441,13 @@ const EditCard = () => {
                     type={"number"}
                   />
                   <Textinput
-                    name={`levels.${index}.profit_per_hour`}
+                    // name={`levels.${index}.profit_per_hour`}
                     label="Profit per Hour"
                     classLabel="text-xs font-semibold"
                     placeholder="Profit per Hour"
-                    register={register}
-                    defaultValue={field.profit_per_hour}
-                    type={"number"}
+                    defaultValue={formatAndRoundNumber(
+                      watch(`levels.${index}.profit_per_hour`)
+                    )}
                     readonly
                   />
                   <Textinput

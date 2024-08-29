@@ -14,6 +14,7 @@ import {
 } from "react-table";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { formatAndRoundNumber } from "@/pages/app/cards/utils";
 
 const CardDetailTable = ({ cardData }) => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const CardDetailTable = ({ cardData }) => {
         return (
           <span className="flex items-center min-w-[150px]">
             <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {row?.cell?.value}
+              {formatAndRoundNumber(row?.cell?.value)}
             </span>
           </span>
         );
@@ -64,6 +65,19 @@ const CardDetailTable = ({ cardData }) => {
     {
       Header: "profit per hour",
       accessor: "profit_per_hour_increase",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {formatAndRoundNumber(row?.cell?.value)}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
+      Header: "respawn time (minutes)",
+      accessor: "respawn_time",
       Cell: (row) => {
         return (
           <span className="flex items-center min-w-[150px]">

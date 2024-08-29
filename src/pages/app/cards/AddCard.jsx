@@ -20,7 +20,7 @@ import { useParams } from "react-router-dom";
 import Icons from "@/components/ui/Icon";
 import Select from "@/components/ui/Select";
 import { API_URL } from "@/store/api/apiSlice";
-import { calculateValues } from "./utils";
+import { calculateValues, formatAndRoundNumber } from "./utils";
 import Switch from "@/components/ui/Switch";
 
 const AddCard = () => {
@@ -367,13 +367,13 @@ const AddCard = () => {
                   type={"number"}
                 />
                 <Textinput
-                  name={`levels.${index}.upgrade_price`}
+                  // name={`levels.${index}.upgrade_price`}
                   label="Upgrade Price"
                   classLabel="text-xs font-semibold"
                   placeholder="Upgrade Price"
-                  register={register}
-                  defaultValue={field.upgrade_price}
-                  type={"number"}
+                  defaultValue={formatAndRoundNumber(
+                    watch(`levels.${index}.upgrade_price`)
+                  )}
                   readonly
                 />
                 <Textinput
@@ -386,13 +386,13 @@ const AddCard = () => {
                   type={"number"}
                 />
                 <Textinput
-                  name={`levels.${index}.profit_per_hour`}
+                  // name={`levels.${index}.profit_per_hour`}
                   label="Profit per Hour"
                   classLabel="text-xs font-semibold"
                   placeholder="Profit per Hour"
-                  register={register}
-                  defaultValue={field.profit_per_hour}
-                  type={"number"}
+                  defaultValue={formatAndRoundNumber(
+                    watch(`levels.${index}.profit_per_hour`)
+                  )}
                   readonly
                 />
                 <Textinput

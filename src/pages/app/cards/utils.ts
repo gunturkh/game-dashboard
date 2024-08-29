@@ -34,3 +34,11 @@ export function calculateValues(levels, initialProfit, initialUpgradePrice) {
 
   return levels;
 }
+
+export function formatAndRoundNumber(input) {
+  // Convert the input to a float and round it to the nearest whole number
+  const roundedNumber = Math.round(parseFloat(input));
+
+  // Format the rounded number with commas as thousand separators
+  return roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
