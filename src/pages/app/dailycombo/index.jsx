@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import useWidth from "@/hooks/useWidth";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { toggleAddModal } from "./store";
+import { toggleAddCardModal } from "./store";
 import { toast, ToastContainer } from "react-toastify";
 import { useGetDailyComboQuery } from "./dailycomboApiSlice";
 import { useNavigate } from "react-router-dom";
 import DailyComboTable from "@/components/partials/Table/dailycombo-table";
 import LoaderCircle from "@/components/Loader-circle";
+import AddDailyCombo from "./AddDailyCombo";
 
 const DailyComboPage = () => {
   const navigate = useNavigate();
@@ -62,7 +63,10 @@ const DailyComboPage = () => {
             text="Add Daily Combo"
             className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
             iconClass=" text-lg"
-            onClick={() => dispatch(toggleAddModal(true))}
+            onClick={() => {
+              console.log("clicked");
+              dispatch(toggleAddCardModal(true));
+            }}
           />
         </div>
       </div>
@@ -71,6 +75,7 @@ const DailyComboPage = () => {
           <DailyComboTable dailycomboDatas={getDailyCombo?.items} />
         </Card>
       )}
+      <AddDailyCombo />
     </div>
   );
 };

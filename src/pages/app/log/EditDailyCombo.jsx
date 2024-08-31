@@ -15,7 +15,7 @@ import {
   useGetCardByIdQuery,
   useGetCardsQuery,
   usePutCardMutation,
-} from "./dailycomboApiSlice";
+} from "./logsApiSlice";
 import { useUploadMutation } from "@/store/api/image/imageApiSlice";
 import { useParams } from "react-router-dom";
 import Icons from "@/components/ui/Icon";
@@ -26,7 +26,7 @@ import { API_URL } from "@/store/api/apiSlice";
 import { calculateValues, formatAndRoundNumber } from "./utils";
 import Switch from "@/components/ui/Switch";
 
-const EditCard = () => {
+const EditDailyCombo = () => {
   const { id } = useParams();
   console.log("category id inside addCard", id);
   const { editCardModal, editCardItem } = useSelector((state) => state.card);
@@ -477,4 +477,4 @@ const EditCard = () => {
   );
 };
 
-export default EditCard;
+export default EditDailyCombo;
