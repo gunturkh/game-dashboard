@@ -194,7 +194,7 @@ const LogPage = () => {
             enableHotKeys
             enableSearch
             extraLines={1}
-            height="520"
+            height="800"
             onLineContentClick={function noRefCheck() {}}
             selectableLines
             text={points}
@@ -209,7 +209,7 @@ const LogPage = () => {
             enableHotKeys
             enableSearch
             extraLines={1}
-            height="520"
+            height="800"
             onLineContentClick={function noRefCheck() {}}
             selectableLines
             text={profits}
@@ -224,7 +224,7 @@ const LogPage = () => {
             enableHotKeys
             enableSearch
             extraLines={1}
-            height="520"
+            height="800"
             onLineContentClick={function noRefCheck() {}}
             selectableLines
             text={levels}
