@@ -42,6 +42,7 @@ const EditTask = () => {
   const [putTask] = usePutTaskMutation();
   const [upload, { isLoading }] = useUploadMutation();
   console.log("getTaskById by id", getTaskById);
+  console.log("editCardItem", editCardItem);
   const FormValidationSchema = yup
     .object({
       // level: yup.array().required("Levels is required"),
@@ -72,23 +73,29 @@ const EditTask = () => {
         image,
         type,
         reward_coins,
-        periodicity,
+        // periodicity,
         is_published,
+        requires_admin_approval,
         config,
       } = data;
       const response = await putTask({
+        id: editCardItem?.id,
         name,
         image,
         type,
         reward_coins: parseInt(reward_coins),
-        periodicity,
         is_published,
+        requires_admin_approval,
         config,
       });
       console.log("response create task", response.data);
-      toast.success("Add Task Successful");
-      dispatch(toggleEditCardModal(false));
-      reset();
+      if (response.data) {
+        toast.success("Edit Task Successful");
+        dispatch(toggleEditCardModal(false));
+        reset();
+      } else {
+        toast.error(response.message);
+      }
     } catch (error) {
       toast.error(error.message);
     }
@@ -122,8 +129,20 @@ const EditTask = () => {
       // setValue("type", getTaskById.type);
       setValue("reward_coins", getTaskById.reward_coins);
       setValue("is_published", getTaskById.is_published);
-      setValue("periodicity", getTaskById.periodicity);
+      setValue("requires_admin_approval", getTaskById.requires_admin_approval);
       setStatus("uploaded");
+      if (getTaskById?.config) {
+        setValue("config.modal_title", getTaskById.config.modal_title);
+        setValue(
+          "config.modal_description",
+          getTaskById.config.modal_description
+        );
+        setValue(
+          "config.modal_link_button",
+          getTaskById.config.modal_link_button
+        );
+        setValue("config.modal_link_url", getTaskById.config.modal_link_url);
+      }
     }
   }, [getTaskById]);
 
@@ -147,12 +166,40 @@ const EditTask = () => {
               register={register}
               error={errors.name}
             />
+            <Textinput
+              name="config.modal_title"
+              label="Modal Title"
+              placeholder="Modal Title"
+              register={register}
+              error={errors?.config?.modal_title}
+            />
+            <Textinput
+              name="config.modal_description"
+              label="Modal Description"
+              placeholder="Modal Description"
+              register={register}
+              error={errors?.config?.modal_description}
+            />
             <Controller
               name="is_published"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Switch
                   label={`${value ? "Unpublish" : "Publish"}`}
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+            <label className={`block capitalize `}>
+              Requires admin approval when Task is completed?
+            </label>
+            <Controller
+              name="requires_admin_approval"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Switch
+                  label={`${value ? "Yes" : "No"}`}
                   value={value}
                   onChange={onChange}
                 />
@@ -177,23 +224,32 @@ const EditTask = () => {
                 { value: "watch_video", label: "Watch Video" },
               ]}
             /> */}
-            {(watch("type") === "Default" || watch("type") === "WithLink") && (
-              <Textinput
-                name="config.link"
-                label="Link"
-                placeholder="Link"
-                register={register}
-                error={errors?.config?.link}
-              />
+            {watch("type") === "with_link" && (
+              <>
+                <Textinput
+                  name="config.modal_link_button"
+                  label="Modal Link Button Title"
+                  placeholder="Modal Link Button Title"
+                  register={register}
+                  error={errors?.config?.modal_link_button}
+                />
+                <Textinput
+                  name="config.modal_link_url"
+                  label="Link"
+                  placeholder="Link"
+                  register={register}
+                  error={errors?.config?.modal_link_url}
+                />
+              </>
             )}
-            <Select
+            {/* <Select
               name={"periodicity"}
               label={"Periodicity"}
               register={register}
               placeholder="Periodicity"
               defaultValue={1}
               options={[{ value: "Once", label: "Once" }]}
-            />
+            /> */}
             <label
               htmlFor={"card-icon"}
               className={`block capitalize flex-0 mr-6 md:w-[100px] w-[60px] break-words `}

@@ -51,13 +51,19 @@ const AddTask = () => {
       id: "",
       name: "",
       reward_coins: 0,
-      type: "follow_social_media",
+      type: "with_link",
       config: {
-        link: "",
+        modal_title: "",
+        modal_description: "",
+        modal_link_button: "",
+        modal_link_url: "",
+        check_in_data: [{ day: 0, reward_coins: 0 }],
+        // link: "",
       },
-      periodicity: "Once",
+      // periodicity: "Once",
       image: "",
       is_published: false,
+      requires_admin_approval: false,
     },
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
@@ -86,7 +92,7 @@ const AddTask = () => {
         image,
         type,
         reward_coins,
-        periodicity,
+        // periodicity,
         is_published,
         config,
       } = data;
@@ -95,7 +101,7 @@ const AddTask = () => {
         image,
         type,
         reward_coins: parseInt(reward_coins),
-        periodicity,
+        // periodicity,
         is_published,
         config,
       });
@@ -134,7 +140,7 @@ const AddTask = () => {
   return (
     <div>
       <Modal
-        title="Add New Level"
+        title="Add New Task"
         labelclassName="btn-outline-dark"
         activeModal={openCardModal}
         onClose={() => dispatch(toggleAddCardModal(false))}
@@ -150,12 +156,40 @@ const AddTask = () => {
               register={register}
               error={errors.name}
             />
+            <Textinput
+              name="config.modal_title"
+              label="Modal Title"
+              placeholder="Modal Title"
+              register={register}
+              error={errors?.config?.modal_title}
+            />
+            <Textinput
+              name="config.modal_description"
+              label="Modal Description"
+              placeholder="Modal Description"
+              register={register}
+              error={errors?.config?.modal_description}
+            />
             <Controller
               name="is_published"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <Switch
                   label={`${value ? "Unpublish" : "Publish"}`}
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+            <label className={`block capitalize `}>
+              Requires admin approval when Task is completed?
+            </label>
+            <Controller
+              name="requires_admin_approval"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Switch
+                  label={`${value ? "Yes" : "No"}`}
                   value={value}
                   onChange={onChange}
                 />
@@ -174,29 +208,39 @@ const AddTask = () => {
               label={"Type"}
               register={register}
               placeholder="Task type"
-              defaultValue={'follow_social_media'}
+              defaultValue={"with_link"}
               options={[
-                { value: "follow_social_media", label: "Follow Social Media" },
-                { value: "watch_video", label: "Watch Video" },
+                { value: "with_link", label: "With Link" },
+                { value: "daily_check_in", label: "Daily Check In" },
+                // { value: "watch_video", label: "Watch Video" },
               ]}
             />
-            {watch("type") === "follow_social_media" && (
-              <Textinput
-                name="config.link"
-                label="Link"
-                placeholder="Link"
-                register={register}
-                error={errors?.config?.link}
-              />
+            {watch("type") === "with_link" && (
+              <>
+                <Textinput
+                  name="config.modal_link_button"
+                  label="Modal Link Button Title"
+                  placeholder="Modal Link Button Title"
+                  register={register}
+                  error={errors?.config?.modal_link_button}
+                />
+                <Textinput
+                  name="config.modal_link_url"
+                  label="Link"
+                  placeholder="Link"
+                  register={register}
+                  error={errors?.config?.modal_link_url}
+                />
+              </>
             )}
-            <Select
+            {/* <Select
               name={"periodicity"}
               label={"Periodicity"}
               register={register}
               placeholder="Periodicity"
               defaultValue={1}
               options={[{ value: "Once", label: "Once" }]}
-            />
+            /> */}
             <label
               htmlFor={"card-icon"}
               className={`block capitalize flex-0 mr-6 md:w-[100px] w-[60px] break-words `}
