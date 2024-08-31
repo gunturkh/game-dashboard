@@ -10,6 +10,7 @@ import auth from "./api/auth/authSlice";
 import cart from "./api/shop/cartSlice";
 import player from "../pages/app/players/store"
 import task from "../pages/app/tasks/store"
+import dailycombo from "../pages/app/dailycombo/store"
 
 const rootReducer = {
   layout,
@@ -23,6 +24,7 @@ const rootReducer = {
   cart,
   level,
   player,
-  task
+  task,
+  dailycombo
 };
 export default rootReducer;

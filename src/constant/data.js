@@ -104,6 +104,12 @@ export const menuItems = [
     isHide: true,
   },
   {
+    title: "Daily Combo",
+    icon: "heroicons-outline:view-boards",
+    link: "dailycombo",
+    isHide: true,
+  },
+  {
     title: "Tasks",
     icon: "heroicons-outline:view-boards",
     link: "tasks",
