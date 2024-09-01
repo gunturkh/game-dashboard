@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import DailyComboTable from "@/components/partials/Table/dailycombo-table";
 import LoaderCircle from "@/components/Loader-circle";
 import AddDailyCombo from "./AddDailyCombo";
+import EditDailyCombo from "./EditDailyCombo";
 
 const DailyComboPage = () => {
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ const DailyComboPage = () => {
         </Card>
       )}
       <AddDailyCombo />
+      <EditDailyCombo />
     </div>
   );
 };

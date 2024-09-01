@@ -20,7 +20,7 @@ export const dailycomboApi = apiSlice.injectEndpoints({
                 body: data,
             }),
             transformResponse: (response) => response.data,
-            providesTags: ["DailyCombo"],
+            invalidatesTags: ["DailyCombo"],
         }),
         putDailyCombo: builder.mutation({
             query: (data) => ({
@@ -29,7 +29,7 @@ export const dailycomboApi = apiSlice.injectEndpoints({
                 body: data,
             }),
             transformResponse: (response) => response.data,
-            providesTags: ["DailyCombo"],
+            invalidatesTags: ["DailyCombo"],
         }),
     }),
 });

@@ -15,7 +15,7 @@ import {
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setEditCardItem } from "@/pages/app/cards/store";
+import { setEditCardItem } from "@/pages/app/dailycombo/store";
 
 const DailyComboTable = ({ dailycomboDatas }) => {
   const navigate = useNavigate();
