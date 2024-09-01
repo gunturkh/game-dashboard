@@ -103,6 +103,7 @@ const DailyComboTable = ({ dailycomboDatas }) => {
     {
       Header: "Created At",
       accessor: "created_at_unix",
+      sortingFn: "datetime",
       Cell: (row) => {
         return (
           <span>
@@ -114,6 +115,7 @@ const DailyComboTable = ({ dailycomboDatas }) => {
     {
       Header: "Updated At",
       accessor: "updated_at_unix",
+      sortingFn: "datetime",
       Cell: (row) => {
         return (
           <span>

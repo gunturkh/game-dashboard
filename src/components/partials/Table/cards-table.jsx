@@ -87,8 +87,9 @@ const CardsTable = ({ cardsData }) => {
       },
     },
     {
-      Header: "Updated AT",
+      Header: "Updated At",
       accessor: "updated_at_unix",
+      sortingFn: 'datetime',
       Cell: (row) => {
         return (
           <span>
