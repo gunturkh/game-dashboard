@@ -53,7 +53,7 @@ const AddCard = () => {
     }
     if (cards?.length > 0) {
       const options = getCards.map((c) => ({ value: c.id, label: c.name }));
-      return [{ value: "null", label: "empty" }, ...options];
+      return options;
     } else return [{ value: 0, label: "null" }];
   };
   console.log("getCards", getCards);
@@ -78,6 +78,13 @@ const AddCard = () => {
       respawn_time: 0,
     });
   }
+  const defaultCardLevelConditionValue = [];
+  for (let index = 0; index < 25; index++) {
+    defaultCardLevelConditionValue.push({
+      value: index + 1,
+      label: index + 1,
+    });
+  }
 
   const {
     register,
@@ -91,6 +98,12 @@ const AddCard = () => {
     defaultValues: {
       available_duration: 0,
       levels: defaultLevelValue,
+      condition: {
+        type: "null",
+        card_id: 1,
+        card_level: 1,
+        invite_friend_count: 1,
+      },
     },
     resolver: yupResolver(FormValidationSchema),
     mode: "all",
@@ -100,46 +113,50 @@ const AddCard = () => {
   console.log("watch level", watch("condition-level"));
   console.log("defaultLevelValue", defaultLevelValue);
 
-  useEffect(() => {
-    const getCardLevelByCardConditionId = async (id) => {
-      try {
-        setConditionCardLevelOptionsLoading(true);
-        const token = JSON.parse(localStorage.getItem("token"));
-        const response = await fetch(`${API_URL}/admin/cards/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const result = await response.json();
-        // console.log("response", result);
-        if (result.status) {
-          const data = result.data;
-          const options = data.levels?.map((l) => ({
-            value: l.level,
-            label: l.level,
-          }));
-          setConditionCardLevelOptions(options);
-          setConditionCardLevelOptionsLoading(false);
-        } else setConditionCardLevelOptionsLoading(false);
-      } catch (error) {
-        setConditionCardLevelOptionsLoading(false);
-        console.log("error.message", error.message);
-      }
-    };
+  // useEffect(() => {
+  //   const getCardLevelByCardConditionId = async (id) => {
+  //     try {
+  //       setConditionCardLevelOptionsLoading(true);
+  //       const token = JSON.parse(localStorage.getItem("token"));
+  //       const response = await fetch(`${API_URL}/admin/cards/${id}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       const result = await response.json();
+  //       console.log("response", result);
+  //       if (result.status) {
+  //         const data = result.data;
+  //         const options = data.levels?.map((l) => ({
+  //           value: l.level,
+  //           label: l.level.toString(),
+  //         }));
+  //         console.log("options condition levels", options);
+  //         if (options) {
+  //           setConditionCardLevelOptions(options);
+  //           // setConditionCardLevelOptions([{value: 'test', label: 'test'}]);
+  //         }
+  //         setConditionCardLevelOptionsLoading(false);
+  //       } else setConditionCardLevelOptionsLoading(false);
+  //     } catch (error) {
+  //       setConditionCardLevelOptionsLoading(false);
+  //       console.log("error.message", error.message);
+  //     }
+  //   };
 
-    if (
-      conditionValue !== null &&
-      conditionValue !== undefined &&
-      conditionValue !== "" &&
-      conditionValue !== "null"
-    ) {
-      getCardLevelByCardConditionId(conditionValue);
-    }
-    if (conditionValue === null || conditionValue === "null") {
-      setConditionCardLevelOptions(null);
-      setValue("conditionLevel", 1);
-    }
-  }, [conditionValue]);
+  //   if (
+  //     conditionValue !== null &&
+  //     conditionValue !== undefined &&
+  //     conditionValue !== "" &&
+  //     conditionValue !== "null"
+  //   ) {
+  //     getCardLevelByCardConditionId(conditionValue);
+  //   }
+  //   if (conditionValue === null || conditionValue === "null") {
+  //     setConditionCardLevelOptions([{ value: 0, label: "null" }]);
+  //     setValue("conditionLevel", 1);
+  //   }
+  // }, [conditionValue]);
 
   const { fields, append, remove, swap } = useFieldArray({
     control,
@@ -159,7 +176,7 @@ const AddCard = () => {
         image,
         levels,
         condition,
-        conditionLevel,
+        // conditionLevel,
       } = data;
       const card = {
         name,
@@ -175,14 +192,23 @@ const AddCard = () => {
         })),
         ...(condition &&
           condition !== "null" &&
-          conditionLevel && {
+          condition.type === "card" && {
             condition: {
-              card_id: parseInt(condition),
-              level: parseInt(conditionLevel),
+              type: condition.type,
+              card_id: parseInt(condition.card_id),
+              card_level: parseInt(condition.card_level),
+            },
+          }),
+        ...(condition &&
+          condition !== "null" &&
+          condition.type === "invite_friends" && {
+            condition: {
+              type: condition.type,
+              invite_friend_count: parseInt(condition.invite_friend_count),
             },
           }),
       };
-      console.log("card", card);
+      console.log("submit card", card);
 
       const response = await createCard(card);
       console.log("response create card", response);
@@ -274,27 +300,50 @@ const AddCard = () => {
             </div>
           )}
           <Select
-            name={"condition"}
-            label={"condition"}
+            name={"condition.type"}
+            label={"Condition Type"}
             register={register}
             placeholder="Condition to buy card"
-            defaultValue={null}
-            options={conditionOptions(getCards)}
+            defaultValue={"null"}
+            options={[
+              { value: "null", label: "Empty" },
+              { value: "card", label: "Card Level" },
+              { value: "invite_friends", label: "Invite Friends" },
+            ]}
           />
-          {conditionCardLevelOptionsLoading ? (
-            <p>Loading...</p>
-          ) : (
-            conditionCardLevelOptions && (
+
+          {watch("condition.type") === "card" && (
+            <>
               <Select
-                name={"conditionLevel"}
-                label={"condition level"}
+                name={"condition.card_id"}
+                label={"Card Name"}
+                register={register}
+                placeholder="Card Name"
+                defaultValue={1}
+                options={conditionOptions(getCards)}
+              />
+              <Select
+                name={"condition.card_level"}
+                label={"Card level"}
                 register={register}
                 placeholder="Level Condition to buy card"
                 defaultValue={1}
-                options={conditionCardLevelOptions}
+                options={defaultCardLevelConditionValue}
               />
-            )
+            </>
           )}
+
+          {watch("condition.type") === "invite_friends" && (
+            <Textinput
+              name="condition.invite_friend_count"
+              label="Invite Friend Count"
+              placeholder="Invite Friend Count"
+              register={register}
+              error={errors.invite_friend_count}
+              type={"number"}
+            />
+          )}
+
           <Textinput
             name="available_duration"
             label="Available For (hours)"
