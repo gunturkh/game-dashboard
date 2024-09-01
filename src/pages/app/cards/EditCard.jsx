@@ -486,7 +486,7 @@ const EditCard = () => {
                     classLabel="text-xs font-semibold"
                     placeholder="Profit per Hour"
                     defaultValue={formatAndRoundNumber(
-                      watch(`levels.${index}.profit_per_hour`)
+                      watch(`levels.${index}.profit_per_hour_increase`)
                     )}
                     readonly
                   />

@@ -13,8 +13,8 @@ export function calculateValues(levels, initialProfit, initialUpgradePrice) {
     // For level 1, use the initial values
     else if (level.level === 1) {
       level.upgrade_price = parseFloat(initialUpgradePrice) + parseFloat(initialUpgradePrice) * parseFloat(level.price_multiplier);
-      level.profit_per_hour = parseFloat(initialProfit) + parseFloat(initialProfit) * parseFloat(level.profit_per_hour_multiplier);
-      level.profit_per_hour_increase = parseFloat(initialProfit) * parseFloat(level.profit_per_hour_multiplier);;
+      level.profit_per_hour = parseFloat(initialProfit) + parseFloat(initialProfit) + parseFloat(initialProfit) * parseFloat(level.profit_per_hour_multiplier);
+      level.profit_per_hour_increase = parseFloat(initialProfit) + parseFloat(initialProfit) * parseFloat(level.profit_per_hour_multiplier);;
     } else {
       // For subsequent levels, use the previous level's upgrade_price and profit_per_hour_increase
       const previousLevel = levels[i - 1];
@@ -25,10 +25,12 @@ export function calculateValues(levels, initialProfit, initialUpgradePrice) {
 
       level.profit_per_hour =
         parseFloat(previousLevel.profit_per_hour) +
-        parseFloat(previousLevel.profit_per_hour) * parseFloat(level.profit_per_hour_multiplier);
+        parseFloat(previousLevel.profit_per_hour_increase) +
+        parseFloat(previousLevel.profit_per_hour_increase) * parseFloat(level.profit_per_hour_multiplier);
 
       level.profit_per_hour_increase =
-        parseFloat(previousLevel.profit_per_hour) * parseFloat(level.profit_per_hour_multiplier);
+        parseFloat(previousLevel.profit_per_hour_increase) +
+        parseFloat(previousLevel.profit_per_hour_increase) * parseFloat(level.profit_per_hour_multiplier);
     }
   }
 
