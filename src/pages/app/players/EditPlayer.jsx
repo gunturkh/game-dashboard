@@ -62,7 +62,8 @@ const EditPlayer = () => {
       console.log("edit player", player);
       const response = await putPlayer(player);
       console.log("response edit player", response.data);
-      if (response.status) {
+      console.log('response', response)
+      if (response.data) {
         toast.success("Edit player Successful");
         dispatch(toggleEditPlayerModal(false));
         reset();
