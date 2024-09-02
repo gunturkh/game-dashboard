@@ -66,9 +66,13 @@ const EditPlayer = () => {
         toast.success("Edit player Successful");
         dispatch(toggleEditPlayerModal(false));
         reset();
-      } else toast.error('failed to update points');
+      } else {
+        toast.error("failed to update points");
+        dispatch(toggleEditPlayerModal(false));
+      }
     } catch (error) {
       toast.error(error.message);
+        dispatch(toggleEditPlayerModal(false));
     }
   };
 
