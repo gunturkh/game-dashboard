@@ -12,8 +12,9 @@ import { usePutPlayerMutation } from "./playersApiSlice";
 import { toggleEditPlayerModal } from "./store";
 
 const EditPlayer = () => {
-  const { editPlayerModal, editPlayerItem,  } =
-    useSelector((state) => state.player);
+  const { editPlayerModal, editPlayerItem } = useSelector(
+    (state) => state.player
+  );
   const { token } = useSelector((state) => state.auth);
   console.log("token inside modal player", token);
   const dispatch = useDispatch();
@@ -61,9 +62,11 @@ const EditPlayer = () => {
       console.log("edit player", player);
       const response = await putPlayer(player);
       console.log("response edit player", response.data);
-      toast.success("Edit player Successful");
-      dispatch(toggleEditPlayerModal(false));
-      reset();
+      if (response.status) {
+        toast.success("Edit player Successful");
+        dispatch(toggleEditPlayerModal(false));
+        reset();
+      } else toast.error(response.data.message);
     } catch (error) {
       toast.error(error.message);
     }
