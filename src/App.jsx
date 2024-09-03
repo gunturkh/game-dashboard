@@ -116,6 +116,7 @@ const LevelPostPage = lazy(() => import("./pages/app/levels"));
 const PlayersPostPage = lazy(() => import("./pages/app/players"));
 const ReferralsPostPage = lazy(() => import("./pages/app/referrals"));
 const TasksPostPage = lazy(() => import("./pages/app/tasks"));
+const TaskSubmissionsPostPage = lazy(() => import("./pages/app/tasks/TaskSubmissions"));
 const DailyComboPostPage = lazy(() => import("./pages/app/dailycombo"));
 const DailyComboDetailsPage = lazy(() => import("./pages/app/dailycombo/dailycombo-details"));
 const LogPostPage = lazy(() => import("./pages/app/log"));
@@ -179,6 +180,7 @@ function App() {
           <Route path="referrals" element={<ReferralsPostPage />} />
           <Route path="tasks" element={<TasksPostPage />} />
           <Route path={"tasks/:id"} element={<TasksPostPage />} />
+          <Route path="tasks/submissions" element={<TaskSubmissionsPostPage />} />
           <Route path="dailycombo" element={<DailyComboPostPage />} />
           <Route path={"dailycombo/:id"} element={<DailyComboDetailsPage />} />
           <Route path="log" element={<LogPostPage />} />

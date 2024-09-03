@@ -41,11 +41,13 @@ const EditDailyCombo = () => {
 
   useEffect(() => {
     if (getCards) {
-      const options = getCards.map((c) => ({
-        value: c.id,
-        label: c.name,
-        image: c.image,
-      }));
+      const options = getCards
+        .filter((c) => c.is_published)
+        .map((c) => ({
+          value: c.id,
+          label: c.name,
+          image: c.image,
+        }));
       setSelectOptions(options);
     }
   }, [getCards]);

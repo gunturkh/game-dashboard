@@ -26,11 +26,14 @@ const DailyComboPage = () => {
     isFetching: dailyComboFetching,
     error,
     isError,
-  } = useGetDailyComboQuery(undefined, {
-    skipPollingIfUnfocused: true,
-    refetchOnMountOrArgChange: true,
-    skip: false,
-  });
+  } = useGetDailyComboQuery(
+    { per_page: 300 },
+    {
+      skipPollingIfUnfocused: true,
+      refetchOnMountOrArgChange: true,
+      skip: false,
+    }
+  );
   console.log("getDailyCombo", getDailyCombo);
 
   useEffect(() => {

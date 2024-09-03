@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useGetTasksQuery } from "./taskApiSlice";
+import { useGetTaskSubmissionsQuery } from "./taskApiSlice";
 import LoaderCircle from "@/components/Loader-circle";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -13,18 +13,19 @@ import Card from "@/components/ui/Card";
 import { toggleAddCardModal } from "./store";
 import TasksTable from "@/components/partials/Table/tasks-table";
 import EditTask from "./EditTask";
+import TaskSubmissionTable from "@/components/partials/Table/task-submissions-table";
 
-function Tasks() {
+function TaskSubmissions() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { width, breakpoints } = useWidth();
   const {
-    data: getTasks,
+    data: getTaskSubmissions,
     isLoading,
     isFetching,
     error,
     isError,
-  } = useGetTasksQuery(undefined, {
+  } = useGetTaskSubmissionsQuery(undefined, {
     skipPollingIfUnfocused: true,
     refetchOnMountOrArgChange: true,
     skip: false,
@@ -40,7 +41,7 @@ function Tasks() {
     }
   }, [error, isError]);
 
-  console.log("getTasks", getTasks);
+  console.log("getTaskSubmissions", getTaskSubmissions);
   if (isLoading || isFetching) return <LoaderCircle />;
   return (
     <div>
@@ -53,13 +54,6 @@ function Tasks() {
         } mb-4 md:flex md:space-x-4 md:justify-end items-center rtl:space-x-reverse`}
       >
         <Button
-          icon="heroicons-outline:list-bullet"
-          text="Task Submissions"
-          className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
-          iconClass=" text-lg"
-          onClick={() => (navigate('/tasks/submissions'))}
-        />
-        <Button
           icon="heroicons-outline:plus"
           text="Add Tasks"
           className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
@@ -67,9 +61,9 @@ function Tasks() {
           onClick={() => dispatch(toggleAddCardModal(true))}
         />
       </div>
-      {getTasks && (
+      {getTaskSubmissions && (
         <Card title={"Tasks"} noborder>
-          <TasksTable tasksData={getTasks} />
+          <TaskSubmissionTable tasksData={getTaskSubmissions} />
         </Card>
       )}
       <AddTask />
@@ -78,4 +72,4 @@ function Tasks() {
   );
 }
 
-export default Tasks;
+export default TaskSubmissions;

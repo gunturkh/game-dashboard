@@ -4,7 +4,7 @@ export const dailycomboApi = apiSlice.injectEndpoints({
     tagTypes: ['DailyCombo'],
     endpoints: (builder) => ({
         getDailyCombo: builder.query({
-            query: () => ({ url: `/admin/combos` }),
+            query: (params) => ({ url: `/admin/combos`, params }),
             transformResponse: (response) => response.data,
             providesTags: ["DailyCombo"],
         }),

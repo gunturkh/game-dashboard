@@ -13,6 +13,11 @@ export const taskApi = apiSlice.injectEndpoints({
             transformResponse: (response) => response.data,
             providesTags: ["Tasks"],
         }),
+        getTaskSubmissions: builder.query({
+            query: () => ({ url: `/admin/task-submissions`}),
+            transformResponse: (response) => response.data,
+            providesTags: ["TaskSubmission"],
+        }),
         createTasks: builder.mutation({
             query: (data) => ({
                 url: '/admin/tasks',
@@ -31,6 +36,15 @@ export const taskApi = apiSlice.injectEndpoints({
             transformResponse: (response) => response.data,
             invalidatesTags: ['Tasks']
         }),
+        putSubmission: builder.mutation({
+            query: (data) => ({
+                url: `/admin/task-submissions/${data.id}`,
+                method: "PUT",
+                body: data,
+            }),
+            transformResponse: (response) => response.data,
+            invalidatesTags: ['TaskSubmission']
+        }),
         deleteTask: builder.mutation({
             query: (data) => ({
                 url: `/admin/tasks/${data.id}`,
@@ -41,5 +55,5 @@ export const taskApi = apiSlice.injectEndpoints({
         }),
     }),
 });
-export const { useGetTasksQuery, useGetTaskByIdQuery, useCreateTasksMutation, usePutTaskMutation, useDeleteTaskMutation } = taskApi;
+export const { useGetTasksQuery, useGetTaskByIdQuery, useGetTaskSubmissionsQuery, useCreateTasksMutation, usePutTaskMutation, usePutSubmissionMutation, useDeleteTaskMutation } = taskApi;
 
