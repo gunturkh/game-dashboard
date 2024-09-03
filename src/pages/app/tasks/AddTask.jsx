@@ -92,7 +92,7 @@ const AddTask = () => {
         image,
         type,
         reward_coins,
-        // periodicity,
+        requires_admin_approval,
         is_published,
         config,
       } = data;
@@ -101,7 +101,7 @@ const AddTask = () => {
         image,
         type,
         reward_coins: parseInt(reward_coins),
-        // periodicity,
+        requires_admin_approval,
         is_published,
         config,
       });
