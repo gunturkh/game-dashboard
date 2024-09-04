@@ -89,7 +89,7 @@ const CardsTable = ({ cardsData }) => {
     {
       Header: "Updated At",
       accessor: "updated_at_unix",
-      sortingFn: 'datetime',
+      sortingFn: "datetime",
       Cell: (row) => {
         return (
           <span>
@@ -141,6 +141,12 @@ const CardsTable = ({ cardsData }) => {
       data,
       initialState: {
         pageSize: data?.length,
+        sortBy: [
+          {
+            id: "updated_at_unix",
+            asc: true,
+          },
+        ],
       },
     },
 
