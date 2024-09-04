@@ -15,7 +15,7 @@ function Node({ node, style, dragHandle }) {
     <div style={style} ref={dragHandle} onClick={() => node.toggle()}>
       <div className="flex items-center gap-1 border-b border-neutral-200">
         {node.isOpen && node.children.length > 0 ? (
-          <Icon icon="heroicons:arrow-down-solid"/>
+          <Icon icon="heroicons:arrow-down-solid" />
         ) : node.children.length > 0 ? (
           <Icon icon="heroicons:arrow-right-solid" />
         ) : null}
@@ -24,7 +24,7 @@ function Node({ node, style, dragHandle }) {
         ) : (
           <Icon icon="heroicons:user-solid" />
         )}{" "}
-        <span className="font-semibold">{node.data.username}</span>
+        <span className="font-semibold">{`${node.data.name}`}</span>
         {node.children.length > 0 && (
           <span className="font-semibold text-green-400">
             {" "}
@@ -72,7 +72,7 @@ function Referrals() {
           initialData={getReferrals}
           openByDefault={false}
           /* An accessor can provide a string property name */
-          idAccessor="username"
+          idAccessor={"name"}
           /* or a function with the data as the argument */
           childrenAccessor={(d) => d.referral}
           width={"100%"}
