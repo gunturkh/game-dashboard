@@ -23,6 +23,19 @@ const PlayersTable = ({ playersData }) => {
 
   const COLUMNS = [
     {
+      Header: "ID",
+      accessor: "id",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[50px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
+    {
       Header: "User Name",
       accessor: "username",
       Cell: (row) => {
@@ -113,10 +126,11 @@ const PlayersTable = ({ playersData }) => {
       Header: "Referee",
       accessor: "referee_id",
       Cell: (row) => {
+        const data = row?.data?.filter((r) => r.id === row?.cell?.value)[0]
         return (
           <span className="flex items-center min-w-[150px]">
             <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {row?.cell?.value}
+              {`id: ${row?.cell?.value} - ${data?.first_name} ${data?.last_name} ${data?.username? `(${data?.username})` : ""}`}
             </span>
           </span>
         );
