@@ -17,11 +17,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setEditCardItem } from "@/pages/app/tasks/store";
 import { usePutSubmissionMutation } from "@/pages/app/tasks/taskApiSlice";
+import Modal from "@/components/ui/Modal";
 
 const TaskSubmissionTable = ({ tasksData }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [putSubmission] = usePutSubmissionMutation();
+  const [image, setImage] = useState("");
+  const [showImage, setShowImage] = useState(false);
 
   const actions = [
     // {
@@ -52,7 +55,13 @@ const TaskSubmissionTable = ({ tasksData }) => {
       Cell: (row) => {
         console.log("row", row);
         return (
-          <span className="flex items-center min-w-[150px]">
+          <span
+            onClick={() => {
+              setImage(row?.cell?.value);
+              setShowImage(true);
+            }}
+            className="flex items-center min-w-[150px]"
+          >
             <span className="w-20 h-20 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
               <img
                 src={row?.cell?.value}
@@ -253,6 +262,17 @@ const TaskSubmissionTable = ({ tasksData }) => {
                   })}
                 </tbody>
               </table>
+              <Modal
+                activeModal={showImage}
+                onClose={() => setShowImage(false)}
+                title={"Image Preview"}
+              >
+                <img
+                  src={image}
+                  alt={image}
+                  className="object-cover w-full h-full"
+                />
+              </Modal>
             </div>
           </div>
         </div>

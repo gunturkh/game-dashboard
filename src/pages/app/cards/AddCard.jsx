@@ -368,6 +368,13 @@ const AddCard = () => {
             error={errors.name}
             type={"number"}
           />
+          <Textinput
+            name="totalprofitperhour"
+            label="Total Profit Per Hour"
+            placeholder="Total Profit Per Hour"
+            register={register}
+            readonly
+          />
           <button
             className="flex w-full justify-center bg-green-600 font-semibold text-white my-4 py-2 rounded-md"
             type="button"
@@ -390,6 +397,16 @@ const AddCard = () => {
               );
               console.log("updatedLevels", updatedLevels);
               setValue("levels", updatedLevels);
+              setValue(
+                "totalprofitperhour",
+                parseFloat(updatedLevels[24].profit_per_hour).toLocaleString(
+                  "id-ID",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )
+              );
             }}
           >
             Preview Card Prices
@@ -429,7 +446,7 @@ const AddCard = () => {
                   name={`levels.${index}.profit_per_hour_multiplier`}
                   label="Profit/Hour Multiplier"
                   classLabel="text-xs font-semibold"
-                  placeholder="Profit/Hour Multipliery"
+                  placeholder="Profit/Hour Multiplier"
                   register={register}
                   defaultValue={field.profit_per_hour_multiplier}
                   type={"number"}
@@ -440,8 +457,22 @@ const AddCard = () => {
                   classLabel="text-xs font-semibold"
                   placeholder="Profit per Hour"
                   defaultValue={formatAndRoundNumber(
-                    watch(`levels.${index}.profit_per_hour_delta`)
+                    watch(`levels.${index}.profit_per_hour`)
                   )}
+                  readonly
+                />
+                <Textinput
+                  // name={`levels.${index}.profit_per_hour`}
+                  label="Coefficient"
+                  classLabel="text-xs font-semibold"
+                  placeholder="Coefficient"
+                  defaultValue={parseFloat(
+                    watch(`levels.${index}.profit_per_hour`) /
+                      watch(`levels.${index}.upgrade_price`)
+                  ).toLocaleString("id-ID", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                   readonly
                 />
                 <Textinput
