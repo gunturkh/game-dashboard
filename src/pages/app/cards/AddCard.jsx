@@ -471,7 +471,7 @@ const AddCard = () => {
                       watch(`levels.${index}.upgrade_price`)
                   ).toLocaleString("id-ID", {
                     minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
+                    maximumFractionDigits: 8,
                   })}
                   readonly
                 />
