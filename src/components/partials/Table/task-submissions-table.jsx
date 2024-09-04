@@ -37,11 +37,11 @@ const TaskSubmissionTable = ({ tasksData }) => {
       icon: "heroicons:check-circle",
       doit: (item) => putSubmission({ ...item, is_approved: true }),
     },
-    // {
-    //   name: "Deny",
-    //   icon: "heroicons:x-circle",
-    //   doit: (item) => putSubmission({ ...item, is_approved: false }),
-    // },
+    {
+      name: "Reject",
+      icon: "heroicons:x-circle",
+      doit: (item) => putSubmission({ ...item, is_approved: false }),
+    },
     // {
     //   name: "delete",
     //   icon: "heroicons-outline:trash",
@@ -106,10 +106,16 @@ const TaskSubmissionTable = ({ tasksData }) => {
         return (
           <span className="block min-w-[140px] text-left">
             <span className="inline-block text-center mx-auto py-1">
-              {(row?.cell?.value === false || row?.cell?.value === null) && (
+              {row?.cell?.value === null && (
+                <span className="flex items-center space-x-3 rtl:space-x-reverse">
+                  <span className="h-[6px] w-[6px] bg-slate-600 rounded-full inline-block ring-4 ring-opacity-30 ring-slate-600"></span>
+                  <span>Not Approved Yet</span>
+                </span>
+              )}
+              {row?.cell?.value === false && (
                 <span className="flex items-center space-x-3 rtl:space-x-reverse">
                   <span className="h-[6px] w-[6px] bg-danger-500 rounded-full inline-block ring-4 ring-opacity-30 ring-danger-500"></span>
-                  <span>Not Approved</span>
+                  <span>Rejected</span>
                 </span>
               )}
               {row?.cell?.value === true && (
