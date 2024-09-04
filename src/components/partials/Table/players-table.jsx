@@ -26,6 +26,7 @@ const PlayersTable = ({ playersData }) => {
       Header: "User Name",
       accessor: "username",
       Cell: (row) => {
+        console.log("row player", row);
         return (
           <span className="flex items-center min-w-[150px] cursor-pointer">
             <div
@@ -34,7 +35,9 @@ const PlayersTable = ({ playersData }) => {
               }}
               className="font-bold text-sm text-blue-800 dark:text-blue-300 capitalize"
             >
-              {row?.cell?.value}
+              {`${row?.cell?.row?.original?.first_name} ${
+                row?.cell?.row?.original?.last_name
+              } ${row?.cell?.value ? `(${row?.cell?.value})` : ""}`}
             </div>
           </span>
         );
