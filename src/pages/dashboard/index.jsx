@@ -12,6 +12,7 @@ import RadarChart from "../../components/partials/widget/chart/radar-chart";
 import HomeBredCurbs from "./HomeBredCurbs";
 import { useGetDashboardQuery } from "./dashboardApiSlice";
 import Loading from "@/components/Loading";
+import Calculation from "@/components/partials/widget/chart/LevelCalculation";
 
 const Dashboard = () => {
   const [filterMap, setFilterMap] = useState("usa");
@@ -68,7 +69,8 @@ const Dashboard = () => {
         </div> */}
         <div className="lg:col-span-4 col-span-12">
           <Card title="Players Level" headerslot={<SelectMonth />}>
-            <RadialsChart data={getDashboard} />
+            {/* <RadialsChart data={getDashboard} /> */}
+            <Calculation data={getDashboard} />
           </Card>
         </div>
         {/* <div className="lg:col-span-8 col-span-12">

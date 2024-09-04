@@ -24,6 +24,9 @@ const RadialsChart = ({ data }) => {
           value: {
             fontSize: "16px",
             color: isDark ? "#CBD5E1" : "#475569",
+            formatter: function (val) {
+              return `${val} Players`;
+            }
           },
           total: {
             show: true,
