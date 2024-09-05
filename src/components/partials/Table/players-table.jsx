@@ -126,11 +126,13 @@ const PlayersTable = ({ playersData }) => {
       Header: "Referee",
       accessor: "referee_id",
       Cell: (row) => {
-        const data = row?.data?.filter((r) => r.id === row?.cell?.value)[0]
+        const data = row?.data?.filter((r) => r.id === row?.cell?.value)[0];
         return (
           <span className="flex items-center min-w-[150px]">
             <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {`id: ${row?.cell?.value} - ${data?.first_name} ${data?.last_name} ${data?.username? `(${data?.username})` : ""}`}
+              {`id: ${row?.cell?.value} - ${data?.first_name} ${
+                data?.last_name
+              } ${data?.username ? `(${data?.username})` : ""}`}
             </span>
           </span>
         );
@@ -212,6 +214,7 @@ const PlayersTable = ({ playersData }) => {
       data,
       initialState: {
         pageSize: data?.length,
+        sortBy: [{ id: "id", desc: true }],
       },
     },
 
