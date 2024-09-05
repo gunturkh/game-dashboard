@@ -52,7 +52,9 @@ const AddCard = () => {
       return "-";
     }
     if (cards?.length > 0) {
-      const options = getCards.map((c) => ({ value: c.id, label: c.name }));
+      const options = getCards
+        .filter((f) => f.is_published)
+        .map((c) => ({ value: c.id, label: c.name }));
       return options;
     } else return [{ value: 0, label: "null" }];
   };

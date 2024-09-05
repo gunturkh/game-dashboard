@@ -62,7 +62,9 @@ const EditCard = () => {
       return "-";
     }
     if (cards?.length > 0) {
-      const options = getCards.map((c) => ({ value: c.id, label: c.name }));
+      const options = getCards
+        .filter((f) => f.is_published)
+        .map((c) => ({ value: c.id, label: c.name }));
       return [{ value: "null", label: "empty" }, ...options];
     } else return [{ value: 0, label: "null" }];
   };
@@ -114,7 +116,7 @@ const EditCard = () => {
       setValue("is_active", getCardById.is_active);
       setValue("requirements", getCardById.requirements);
       setValue("initialCondition", getCardById.condition);
-      setValue("condition", getCardById.condition?.id);
+      setValue("condition", getCardById.condition);
       // setValue("conditionLevel", getCardById.condition?.level);
       setValue(
         "nominal",
@@ -144,6 +146,7 @@ const EditCard = () => {
   }, [getCardById]);
 
   console.log("watch(nominal)", watch("nominal"));
+  console.log("watch(condition)", watch("condition"));
   // useEffect(() => {
   //   const getCardLevelByCardConditionId = async (id) => {
   //     try {
