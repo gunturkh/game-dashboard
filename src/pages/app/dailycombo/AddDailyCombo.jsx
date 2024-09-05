@@ -51,8 +51,8 @@ const AddDailyCombo = () => {
   useEffect(() => {
     if (getCards) {
       const options = getCards
-        .filter((c) => c.is_published)
-        .map((c) => ({
+        ?.filter((c) => c.is_published)
+        ?.map((c) => ({
           value: c.id,
           label: c.name,
           image: c.image,
