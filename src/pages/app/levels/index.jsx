@@ -51,13 +51,14 @@ function Levels() {
           width < breakpoints.md ? "space-x-rb" : ""
         } mb-4 md:flex md:space-x-4 md:justify-end items-center rtl:space-x-reverse`}
       >
-        <Button
+        {/* TODO: add level have to include all the fields present on the get levels endpoint */}
+        {/* <Button
           icon="heroicons-outline:plus"
           text="Add Level"
           className="btn-dark dark:bg-slate-800  h-min text-sm font-normal"
           iconClass=" text-lg"
           onClick={() => dispatch(toggleAddCardModal(true))}
-        />
+        /> */}
       </div>
       {getLevels && (
         <Card title={"Level"} noborder>
