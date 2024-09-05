@@ -467,7 +467,7 @@ const AddCard = () => {
                   classLabel="text-xs font-semibold"
                   placeholder="Coefficient"
                   defaultValue={parseFloat(
-                    watch(`levels.${index}.profit_per_hour`) /
+                    watch(`levels.${index}.profit_per_hour_increase`) /
                       watch(`levels.${index}.upgrade_price`)
                   ).toLocaleString("id-ID", {
                     minimumFractionDigits: 2,
