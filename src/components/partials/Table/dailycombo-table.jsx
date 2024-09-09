@@ -247,12 +247,14 @@ const DailyComboTable = ({ dailycomboDatas }) => {
                               .add(18, "hour")
                               .format("YYYY-MM-DD HH:mm:ss")
                           );
-                          // const after = dayjs(cell.row.values.date).isAfter(
-                          //   dayjs()
-                          //     .startOf("d")
-                          //     .add(18, "hour")
-                          //     .format("YYYY-MM-DD HH:mm:ss")
-                          // );
+                          const after = dayjs(cell.row.values.date).isAfter(
+                            dayjs()
+                              .subtract(1, "days")
+                              .startOf("d")
+                              .add(18, "hour")
+                              .format("YYYY-MM-DD HH:mm:ss")
+                          );
+                          console.log('after', after)
                           // const before2 = dayjs(cell.row.values.date).isAfter(
                           //   dayjs(cell.row.values.date)
                           //     .subtract(1, "days")
@@ -277,12 +279,10 @@ const DailyComboTable = ({ dailycomboDatas }) => {
                             <td
                               {...cell.getCellProps()}
                               className={`table-td py-2 ${
-                                before
-                                  ? "bg-red-200"
-                                  : "bg-green-200"
-                                  // : current
-                                  // ? "bg-yellow-200"
-                                  // : "bg-green-200"
+                                before && after ? "bg-green-200" : after ? "" : "bg-red-200"
+                                // : current
+                                // ? "bg-yellow-200"
+                                // : "bg-green-200"
                               }`}
                             >
                               {cell.render("Cell")}
