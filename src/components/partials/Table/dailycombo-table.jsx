@@ -16,7 +16,8 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setEditCardItem } from "@/pages/app/dailycombo/store";
-
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 const DailyComboTable = ({ dailycomboDatas }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -239,10 +240,50 @@ const DailyComboTable = ({ dailycomboDatas }) => {
                     return (
                       <tr {...row.getRowProps()}>
                         {row.cells.map((cell) => {
+                          console.log("cell td", cell.row.values.date);
+                          const before = dayjs(cell.row.values.date).isBefore(
+                            dayjs()
+                              .startOf("d")
+                              .add(18, "hour")
+                              .format("YYYY-MM-DD HH:mm:ss")
+                          );
+                          // const after = dayjs(cell.row.values.date).isAfter(
+                          //   dayjs()
+                          //     .startOf("d")
+                          //     .add(18, "hour")
+                          //     .format("YYYY-MM-DD HH:mm:ss")
+                          // );
+                          // const before2 = dayjs(cell.row.values.date).isAfter(
+                          //   dayjs(cell.row.values.date)
+                          //     .subtract(1, "days")
+                          //     .startOf("d")
+                          //     .add(18, "hours")
+                          //     .format("YYYY-MM-DD HH:mm:ss")
+                          // );
+
+                          // const current = dayjs(cell.row.values.date).isBetween(
+                          //   dayjs(cell.row.values.date)
+                          //     .subtract(1, "days")
+                          //     .startOf("d")
+                          //     .add(18, "hours"),
+                          //   dayjs(cell.row.values.date)
+                          //     .startOf("d")
+                          //     .add(18, "hours")
+                          //     .add(1, "days")
+                          // );
+                          // console.log("current", current, cell.row.values.date);
+                          // console.log("before", before);
                           return (
                             <td
                               {...cell.getCellProps()}
-                              className="table-td py-2"
+                              className={`table-td py-2 ${
+                                before
+                                  ? "bg-red-200"
+                                  : "bg-green-200"
+                                  // : current
+                                  // ? "bg-yellow-200"
+                                  // : "bg-green-200"
+                              }`}
                             >
                               {cell.render("Cell")}
                             </td>
