@@ -241,20 +241,43 @@ const DailyComboTable = ({ dailycomboDatas }) => {
                       <tr {...row.getRowProps()}>
                         {row.cells.map((cell) => {
                           console.log("cell td", cell.row.values.date);
-                          const before = dayjs(cell.row.values.date).isBefore(
-                            dayjs()
+                          const now = dayjs().format("YYYY-MM-DD HH:mm:ss");
+                          const currentHour = dayjs().hour();
+                          const currentMinute = dayjs().minute();
+                          const currentSecond = dayjs().second();
+                          const currentTime = dayjs(cell.row.values.date)
+                            .add(currentHour, "hour")
+                            .add(currentMinute, "minute")
+                            .add(currentSecond, "second")
+                            .format("YYYY-MM-DD HH:mm:ss");
+
+                          const before = dayjs().isBefore(
+                            dayjs(currentTime)
                               .startOf("d")
                               .add(18, "hour")
                               .format("YYYY-MM-DD HH:mm:ss")
                           );
-                          const after = dayjs(cell.row.values.date).isAfter(
+                          const after = dayjs().isAfter(
+                            dayjs(currentTime)
+                              .subtract(1, "days")
+                              .startOf("d")
+                              .add(18, "hour")
+                              .format("YYYY-MM-DD HH:mm:ss")
+                          );
+                          console.log(
+                            cell.row.values.date,
+                            "after value",
                             dayjs()
                               .subtract(1, "days")
                               .startOf("d")
                               .add(18, "hour")
                               .format("YYYY-MM-DD HH:mm:ss")
                           );
-                          console.log('after', after)
+                          console.log({
+                            before,
+                            after,
+                            current: currentTime,
+                          });
                           // const before2 = dayjs(cell.row.values.date).isAfter(
                           //   dayjs(cell.row.values.date)
                           //     .subtract(1, "days")
@@ -275,15 +298,17 @@ const DailyComboTable = ({ dailycomboDatas }) => {
                           // );
                           // console.log("current", current, cell.row.values.date);
                           // console.log("before", before);
+                          const setBackground = () => {
+                            if (before && after) {
+                              return "bg-green-200";
+                            } else if (after) {
+                              return "bg-red-200";
+                            } else return "";
+                          };
                           return (
                             <td
                               {...cell.getCellProps()}
-                              className={`table-td py-2 ${
-                                before && after ? "bg-green-200" : after ? "" : "bg-red-200"
-                                // : current
-                                // ? "bg-yellow-200"
-                                // : "bg-green-200"
-                              }`}
+                              className={`table-td py-2 ${setBackground()}`}
                             >
                               {cell.render("Cell")}
                             </td>
