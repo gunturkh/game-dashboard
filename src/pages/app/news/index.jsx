@@ -41,7 +41,7 @@ const NewsPage = () => {
   const [status, setStatus] = useState("initial");
   const [selectOptions, setSelectOptions] = useState([]);
   const [upload, { isLoading }] = useUploadMutation();
-  const [news, setNews] = useState(`🐿️ Hi Chipmunks! 🐿️ 
+  const [news, setNews] = useState(`🐿️ Hi Chipmunks 🐿️ 
     this is a test news`);
   const [postNews] = usePostNewsMutation();
   const [type, setType] = useState("text");
