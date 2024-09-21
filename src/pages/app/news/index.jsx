@@ -61,7 +61,7 @@ const NewsPage = () => {
       setSelectOptions(
         getPlayers.map((player) => ({
           value: player.telegram_id,
-          label: player.username,
+          label: `${player.username} (${player.first_name} ${player.last_name})`,
         }))
       );
     }
