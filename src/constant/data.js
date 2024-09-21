@@ -127,6 +127,12 @@ export const menuItems = [
     link: "log",
     isHide: true,
   },
+  {
+    title: "News",
+    icon: "heroicons-outline:view-boards",
+    link: "news",
+    isHide: true,
+  },
   // {
   //   title: "Projects",
   //   icon: "heroicons-outline:document",
