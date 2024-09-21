@@ -120,8 +120,12 @@ const NewsPage = () => {
     try {
       console.log("ref", ref.current.getMarkdown());
       console.log("data", data);
+      
+      // Escape special characters for Markdown
+      const escapedMessage = news.replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&');
+      
       const payload = {
-        message: news,
+        message: escapedMessage,
         type: type,
         telegram_ids: data.telegram_ids.map((id) => id.value),
         image_url: data.image_url,
@@ -133,6 +137,7 @@ const NewsPage = () => {
       console.log("post news", payload);
       if (response?.data) {
         toast.success("Send News Successful");
+        setValue("tel")
       } else if (response?.error?.data) {
         throw new Error(response.error.data.message);
       }
