@@ -120,6 +120,7 @@ const TaskSubmissionsPostPage = lazy(() => import("./pages/app/tasks/TaskSubmiss
 const DailyComboPostPage = lazy(() => import("./pages/app/dailycombo"));
 const DailyComboDetailsPage = lazy(() => import("./pages/app/dailycombo/dailycombo-details"));
 const LogPostPage = lazy(() => import("./pages/app/log"));
+const NewsPage = lazy(() => import("./pages/app/news"));
 
 const KanbanPage = lazy(() => import("./pages/app/kanban"));
 const CalenderPage = lazy(() => import("./pages/app/calendar"));
@@ -184,6 +185,7 @@ function App() {
           <Route path="dailycombo" element={<DailyComboPostPage />} />
           <Route path={"dailycombo/:id"} element={<DailyComboDetailsPage />} />
           <Route path="log" element={<LogPostPage />} />
+          <Route path="news" element={<NewsPage />} />
           <Route path="kanban" element={<KanbanPage />} />
           <Route path="calender" element={<CalenderPage />} />
           {/* Components pages */}
