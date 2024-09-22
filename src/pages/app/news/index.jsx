@@ -127,10 +127,13 @@ const NewsPage = () => {
       const payload = {
         message: escapedMessage,
         type: type,
-        telegram_ids: data.telegram_ids.map((id) => id.value),
         image_url: data.image_url,
-        is_all_player: sendTo === "all" ? true : false,
+        is_all_players: sendTo === "all",
+        ...(sendTo !== "all" && {
+          telegram_ids: data.telegram_ids.map((id) => id.value)
+        })
       };
+
       console.log("payload", payload);
       const response = await postNews(payload);
       console.log("response post news", response);
