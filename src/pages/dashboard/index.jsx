@@ -43,9 +43,70 @@ const Dashboard = () => {
     if (!(isLoading || isFetching)) setIsLoaded(false);
   }, [isLoading, isFetching]);
 
+
   if (isLoaded) {
     return <Loading />;
   }
+
+  const LevelDistribution = ({ data }) => {
+    const levelCounts = data?.player_level_count || {};
+
+    if (
+      !data ||
+      !data.player_level_count ||
+      Object.keys(levelCounts).length === 0
+    ) {
+      return (
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+          No data available
+        </div>
+      );
+    }
+
+    const totalPlayers = Object.values(levelCounts).reduce(
+      (sum, { count }) => sum + count,
+      0
+    );
+
+    return (
+      <div className="space-y-4">
+        <div className="text-center font-bold text-2xl">
+          Total Players: <span className="text-indigo-600 dark:text-indigo-400">{totalPlayers.toLocaleString()}</span>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          {Object.entries(levelCounts).map(([level, { count }]) => {
+            const percentage = ((count / totalPlayers) * 100).toFixed(1);
+            return (
+              <div
+                key={level}
+                className="bg-gradient-to-br from-white to-indigo-50 dark:from-slate-800 dark:to-slate-700 rounded-lg shadow-md p-4 flex flex-col items-center transition-all duration-300 hover:scale-105"
+              >
+                <span className="font-medium text-lg text-indigo-600 dark:text-indigo-400">
+                  Level {parseInt(level) + 1}
+                </span>
+                <span className="font-semibold text-2xl mt-2">
+                  {count.toLocaleString()}
+                </span>
+                <span className="text-xs text-gray-600 dark:text-gray-300">
+                  {" "}
+                  players
+                </span>
+                <div className="mt-2 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                  <div
+                    className="bg-indigo-600 dark:bg-indigo-400 h-2.5 rounded-full"
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
+                <span className="text-xs mt-1 text-gray-600 dark:text-gray-300">
+                  {percentage}% of total players
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -67,10 +128,19 @@ const Dashboard = () => {
             </div>
           </Card>
         </div> */}
-        <div className="lg:col-span-4 col-span-12">
+        {/* <div className="lg:col-span-4 col-span-12">
           <Card title="Players Level" headerslot={<SelectMonth />}>
-            {/* <RadialsChart data={getDashboard} /> */}
+            <RadialsChart data={getDashboard} />
             <Calculation data={getDashboard} />
+          </Card>
+        </div> */}
+        <div className="lg:col-span-12 col-span-12">
+          <Card title="Level Distribution" headerslot={<SelectMonth />}>
+            {getDashboard ? (
+              <LevelDistribution data={getDashboard} />
+            ) : (
+              <div>Loading dashboard data...</div>
+            )}
           </Card>
         </div>
         {/* <div className="lg:col-span-8 col-span-12">
