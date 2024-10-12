@@ -203,6 +203,19 @@ const PlayersTable = ({ playersData }) => {
         );
       },
     },
+    {
+      Header: "Coupons Balance",
+      accessor: "coupons_balance",
+      Cell: (row) => {
+        return (
+          <span className="flex items-center min-w-[150px]">
+            <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">
+              {row?.cell?.value}
+            </span>
+          </span>
+        );
+      },
+    },
   ];
 
   const columns = useMemo(() => COLUMNS, []);
