@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { teamData } from "../../../constant/table-data";
 
 import Icon from "@/components/ui/Icon";
@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setEditPlayerItem } from "@/pages/app/players/store";
+import debounce from "lodash/debounce";
 
 const PlayersTable = ({ playersData }) => {
   const navigate = useNavigate();
@@ -214,47 +215,52 @@ const PlayersTable = ({ playersData }) => {
       columns,
       data,
       initialState: {
-        pageSize: data?.length,
+        pageSize: 50, // Adjust this value based on your needs
         sortBy: [{ id: "id", desc: true }],
       },
     },
     useGlobalFilter,
     useSortBy,
-    usePagination,
-    useRowSelect
+    usePagination
   );
+
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    footerGroups,
     page,
+    prepareRow,
+    setGlobalFilter,
+    state: { pageIndex, pageSize },
+    gotoPage,
     nextPage,
     previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
-    state,
-    gotoPage,
-    pageCount,
     setPageSize,
-    setGlobalFilter,
-    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageCount,
+    pageOptions,
   } = tableInstance;
 
-  const { pageIndex, pageSize } = state;
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setGlobalFilter(value || undefined);
+    }, 300),
+    []
+  );
 
-  // Add this function to handle search input changes
+  // Handle search input changes
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setGlobalFilter(value);
+    debouncedSearch(value);
   };
 
   return (
     <>
       <div className="p-2">
-        {/* Add search input */}
+        {/* Search input */}
         <div className="mb-4">
           <input
             type="text"
@@ -266,10 +272,10 @@ const PlayersTable = ({ playersData }) => {
         </div>
         <div className="overflow-x-auto -mx-6">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden ">
+            <div className="overflow-hidden">
               <table
                 className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
-                {...getTableProps}
+                {...getTableProps()}
               >
                 <thead className=" bg-slate-100 dark:bg-slate-700">
                   {headerGroups?.map((headerGroup) => (
@@ -297,28 +303,61 @@ const PlayersTable = ({ playersData }) => {
                 </thead>
                 <tbody
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
-                  {...getTableBodyProps}
+                  {...getTableBodyProps()}
                 >
                   {page?.map((row) => {
                     prepareRow(row);
                     return (
-                      <tr {...row.getRowProps()}>
-                        {row.cells.map((cell) => {
-                          return (
-                            <td
-                              {...cell.getCellProps()}
-                              className="table-td py-2"
-                            >
-                              {cell.render("Cell")}
-                            </td>
-                          );
-                        })}
+                      <tr {...row.getRowProps()} key={row.id}>
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps()} className="table-td py-2" key={cell.column.id}>
+                            {cell.render("Cell")}
+                          </td>
+                        ))}
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        {/* Pagination */}
+        <div className="flex items-center justify-between mt-4">
+          <div>
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+            <select
+              value={pageSize}
+              onChange={e => {
+                setPageSize(Number(e.target.value))
+              }}
+              className="ml-2 border rounded"
+            >
+              {[10, 20, 30, 40, 50, 100, 200].map(pageSize => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <button onClick={() => gotoPage(0)} disabled={!canPreviousPage} className="px-3 py-1 border rounded mr-1">
+              {'<<'}
+            </button>
+            <button onClick={() => previousPage()} disabled={!canPreviousPage} className="px-3 py-1 border rounded mr-1">
+              {'<'}
+            </button>
+            <button onClick={() => nextPage()} disabled={!canNextPage} className="px-3 py-1 border rounded mr-1">
+              {'>'}
+            </button>
+            <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} className="px-3 py-1 border rounded">
+              {'>>'}
+            </button>
           </div>
         </div>
       </div>
