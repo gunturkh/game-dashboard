@@ -20,6 +20,7 @@ import { setEditPlayerItem } from "@/pages/app/players/store";
 const PlayersTable = ({ playersData }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const COLUMNS = [
     {
@@ -206,7 +207,7 @@ const PlayersTable = ({ playersData }) => {
   ];
 
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => playersData, []);
+  const data = useMemo(() => playersData, [playersData]);
 
   const tableInstance = useTable(
     {
@@ -217,7 +218,6 @@ const PlayersTable = ({ playersData }) => {
         sortBy: [{ id: "id", desc: true }],
       },
     },
-
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -244,9 +244,26 @@ const PlayersTable = ({ playersData }) => {
 
   const { pageIndex, pageSize } = state;
 
+  // Add this function to handle search input changes
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setGlobalFilter(value);
+  };
+
   return (
     <>
       <div className="p-2">
+        {/* Add search input */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search players..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full px-3 py-2 text-sm text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300"
+          />
+        </div>
         <div className="overflow-x-auto -mx-6">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden ">
